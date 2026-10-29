@@ -180,6 +180,9 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 </div>
 
 <script>
+window.addEventListener("error",e=>{const h=document.getElementById("hint");if(h)h.textContent="오류: "+(e.message||"")+" ("+((e.filename||"").split("/").pop())+":"+(e.lineno||"")+")"});
+(()=>{
+
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const GLYPH=["한","일","중","양","아","치","카","주","기"];
@@ -299,7 +302,7 @@ function setCrumb(t){$("crumb").textContent=t||"서울";$("crumb").hidden=!t}
 
 /* ---------- 지도 (카카오맵) ---------- */
 // ▼▼▼ 카카오 개발자 사이트에서 받은 JavaScript 키를 따옴표 안에 붙여넣으세요 ▼▼▼
-const KAKAO_KEY="74708def68c22faf3caa9975eb1bcf5d";
+const KAKAO_KEY="여기에_JavaScript_키";
 // ▲▲▲
 let map=null,OV=[],LV=9,BB={s:0,w:0,n:0,e:0};
 const ZP=4; // 이 레벨 이하로 확대하면 가게 하나하나가 보여요 (카카오맵 레벨: 1이 가장 가까움)
@@ -409,6 +412,8 @@ let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>{if(map
 Promise.all([load(),loadKakao()]).then(()=>{initMap();renderPlaces();setCrumb("");fitSeoul();update()})
  .catch(err=>{$("loading").hidden=false;$("loading").innerHTML=err.message==="NOKEY"?"카카오 JavaScript 키가 아직 없어요.<br>index.html 안의 KAKAO_KEY 에 키를 넣어주세요.":
    err.message==="LOADFAIL"?"카카오맵을 불러오지 못했어요.<br>키와 등록한 사이트 주소(JavaScript SDK 도메인)를 확인해 주세요.":"데이터를 불러오지 못했어요. 새로고침해 주세요.";console.error(err)});
+
+})();
 </script>
 
 </body>
