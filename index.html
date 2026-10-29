@@ -75,7 +75,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 /* 아래 시트 */
 .sheet{position:fixed;z-index:30;left:0;right:0;bottom:0;height:86vh;height:86dvh;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sh2);display:flex;flex-direction:column;
   transform:translateY(calc(86dvh - var(--peek) - env(safe-area-inset-bottom,0px)));transition:transform .28s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom,0px)}
-.sheet.half{transform:translateY(50dvh)}
+.sheet.half{transform:translateY(58dvh)}
 .sheet.full{transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.sheet{transition:none}}
 @media (min-width:900px){.sheet{left:12px;right:auto;width:420px;top:118px;bottom:12px;height:auto;border-radius:16px;transform:none!important;box-shadow:var(--sh)}}
@@ -83,7 +83,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .grab::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 8px}
 @media (min-width:900px){.grab{cursor:default}.grab::before{display:none}}
 .shead{display:flex;align-items:center;gap:8px;min-height:44px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .sum{flex:1;min-width:0}
+.shead .btn{padding:8px 10px;font-size:13px}
+@media (max-width:380px){.shead .btn{padding:7px 8px;font-size:12px}}
+.wopt small{white-space:normal!important}
+.wgrid .wopt{overflow:hidden}
+.card h3{overflow-wrap:anywhere}
+.acts{flex-wrap:wrap}
+.chip{max-width:70vw;overflow:hidden;text-overflow:ellipsis}
 .sum b{font-family:var(--f-display);font-weight:400;font-size:22px;color:var(--accent);letter-spacing:-.01em}
 .sum span{display:block;font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:12px;padding:9px 12px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;min-height:40px;text-decoration:none;color:var(--ink)}
@@ -96,7 +104,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .pill{appearance:none;flex:none;border:1px solid var(--line);background:var(--surface);font-size:13px;padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;min-height:34px}
 .pill[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
 .body{flex:1;overflow:auto;padding:4px 16px 24px;display:grid;align-content:start;gap:14px;overscroll-behavior:contain}
-.sheet.half .body{padding-bottom:52dvh}
+.sheet.half .body{padding-bottom:60dvh}
 @media (min-width:900px){.sheet.half .body{padding-bottom:24px}}
 .sec{display:grid;gap:8px}
 .sec h2{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -172,17 +180,19 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .ov-pin span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .ov-pin.pick i{outline:3px solid #E0412B;outline-offset:2px}
 .ov-kp{display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--f-body);transform:translateX(calc(50% - 9px))}
-.ov-kp i{position:relative;width:20px;height:20px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1.5px #1B2220,0 1px 3px rgba(0,0,0,.35);flex:none;color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center}
+.ov-kp i{position:relative;width:21px;height:21px;border-radius:2px;border:2px solid #fff;box-shadow:0 0 0 2.5px #FFCD00,0 1px 4px rgba(0,0,0,.4);flex:none;color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center}
 .ov-kp i::after{content:"";position:absolute;inset:-8px}
 .ov-kp.sel i{width:28px;height:28px;font-size:13px}
 .ov-kp span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
-.kmk{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;box-shadow:0 0 0 1.5px var(--ink) inset}
+.kmk{width:26px;height:26px;border-radius:3px;outline:2.5px solid #FFCD00;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;}
 .legend{position:fixed;z-index:15;pointer-events:none;left:12px;display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:12px;box-shadow:var(--sh);top:158px}
 .legend i{display:inline-block;width:12px;height:12px;margin-right:4px;vertical-align:-1px;background:var(--muted)}
-.legend .c{border-radius:50%}.legend .q{border-radius:3px;box-shadow:0 0 0 1.5px var(--ink)}
+.legend .c{border-radius:50%;background:#E0412B}.legend .q{border-radius:1px;background:#E0412B;box-shadow:0 0 0 2px #FFCD00}
 @media (min-width:900px){.legend{left:444px;top:158px}}
 .ksrc{font-size:12px;color:var(--muted);margin:-2px 0 2px}
-.ov-uni{font-family:var(--f-body);font-size:12px;font-weight:700;color:#1B2220;background:#FFF6DF;border:1px solid #E5D6AE;border-radius:6px;padding:2px 7px;white-space:nowrap;pointer-events:none}
+.ov-uni{font-family:var(--f-body);font-size:13px;font-weight:800;color:#fff;background:#2B4C8C;border:2px solid #fff;border-radius:999px;padding:3px 10px 3px 8px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+.ov-uni::before{content:"🎓 "}
+.ov-uni.far{font-size:12px;padding:2px 4px;opacity:.9}.ov-uni.far::before{content:"🎓"}
 
 .heart{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:12px;min-width:46px;height:46px;font-size:20px;cursor:pointer;color:var(--muted);flex:none}
 .heart[aria-pressed="true"]{color:var(--accent);border-color:var(--accent);background:var(--accent-soft)}
@@ -505,7 +515,7 @@ function paint(){
   if(!META||!map)return;readBounds();OV.forEach(o=>o.setMap(null));OV=[];LV=map.getLevel();
   const pickSet=new Set(st.picks||[]);
   if(LV>=8)paintGu();else if(LV>ZP)paintClusters(pickSet);else paintPins(pickSet);
-  if(LV<=7)UNIS.forEach(u=>{if(u.lat>BB.s&&u.lat<BB.n&&u.lng>BB.w&&u.lng<BB.e)addOv(u.lat,u.lng,mk("ov-uni",u.u.split("·")[0]),0,-1.2)});
+  if(LV<=8)UNIS.forEach(u=>{if(u.lat>BB.s&&u.lat<BB.n&&u.lng>BB.w&&u.lng<BB.e)addOv(u.lat,u.lng,mk("ov-uni"+(LV>=8?" far":""),LV>=8?"":esc(u.u.split("·")[0])),LV>=8?1:80,.5)});
   if(LV<=6)KS.list.forEach((d,j)=>{const sel=j===KS.sel;addOv(d.la,d.ln,mk("ov-kp"+(sel?" sel":""),`<i style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i>${LV<=4||sel?`<span>${esc(d.n)}</span>`:""}`,()=>kSelect(j,true)),sel?70:30)});
   if(LV<=ZP)needNames();
 }
@@ -539,7 +549,7 @@ function paintPins(pickSet){
 let nameTimer;function needNames(){clearTimeout(nameTimer);nameTimer=setTimeout(()=>{
   const want=new Set();for(let i=0;i<N;i++)if((MASK[i]||isStar(i))&&!names.has(G[i])&&inView(i))want.add(G[i]);
   want.forEach(g=>loadGu(g).then(()=>{draw();bodySoon()}))},120)}
-function offset(){try{if(innerWidth>=900)map.panBy(-216,0);else if(st.sheet!=="peek")map.panBy(0,Math.round(innerHeight*0.16))}catch(e){}}
+function offset(){try{if(innerWidth>=900)map.panBy(-216,0);else if(st.sheet!=="peek")map.panBy(0,Math.round(innerHeight*0.12))}catch(e){}}
 function goTo(lat,lng,level){map.setLevel(level);map.setCenter(LL(lat,lng));offset()}
 function boxTo(la0,ln0,la1,ln1){map.setBounds(new kakao.maps.LatLngBounds(LL(la0,ln0),LL(la1,ln1)))}
 function fitSeoul(){innerWidth<600?goTo(37.5560,126.9860,9):goTo(37.5560,126.9600,8)}
@@ -567,12 +577,15 @@ function setSheet(s){st.sheet=s;const el=$("sheet");el.classList.toggle("half",s
   b.addEventListener("scroll",()=>{if(st.sheet==="half"&&b.scrollTop>40&&innerWidth<900)setSheet("full")},{passive:true})})();
 
 let bt;function bodySoon(){clearTimeout(bt);bt=setTimeout(renderBody,120)}
+function refPt(){if(st.place&&st.place[0]!=="g"){const n=+st.place.slice(1);return st.place[0]==="u"?[UNIS[n].lat,UNIS[n].lng]:[AREAS[n][1],AREAS[n][2]]}
+  if(map){const c=map.getCenter();return [c.getLat(),c.getLng()]}return null}
+const distTxt=m=>m<1000?Math.round(m/10)*10+"m":(m/1000).toFixed(1)+"km";
 function itemHTML(i,extra){const r=nm(i),c=cur(i),t=tagsOf(i),sp=P[i]&3;
-  const price=c&&c[1]?won(c[1]):"";
-  const sub=c?esc(c[0]):(r?`${META.c1[C[i]]} · ${esc(String(r[1]).replace(/\s*\(.*$/,"").replace(/,.*$/,""))}`:"");
+  const rp=refPt(),dist=rp?distTxt(Math.hypot((LAT[i]-rp[0])*111000,(LNG[i]-rp[1])*88000)):"";
+  const sub=c?esc(c[0])+(c[1]?" · "+won(c[1]):""):(r?`${META.c1[C[i]]} · ${esc(String(r[1]).replace(/\s*\(.*$/,"").replace(/,.*$/,""))}`:"");
   const tg=[];if(FAVI.has(i))tg.push('<span class="tag hot">♥ 찜</span>');if(sp===2)tg.push('<span class="tag hot">매운맛</span>');t.split("").forEach(k=>TAGN[k]&&tg.push(`<span class="tag">${TAGN[k]}</span>`));
   return `<button class="item${i===st.sel?" sel":""}" type="button" data-i="${i}"><i class="mk" style="background:var(--k${C[i]+1})">${GLYPH[C[i]]}</i>
-    <span class="nm">${r?esc(clean(r[0])):"…"}</span><span class="side">${extra||price}</span><span class="sub">${sub}</span>${tg.length?`<span class="tags">${tg.join("")}</span>`:""}</button>`}
+    <span class="nm">${r?esc(clean(r[0])):"…"}</span><span class="side">${dist}</span><span class="sub">${sub}</span>${tg.length?`<span class="tags">${tg.join("")}</span>`:""}</button>`}
 function cardHTML(i){const r=nm(i);if(!r)return `<div class="card"><div class="meta">가게 정보를 불러오는 중…</div></div>`;
   const c=cur(i),t=tagsOf(i),sp=P[i]&3,subs=META.sub[C[i]].filter((_,b)=>S[i]&(1<<b));
   const tg=[];if(sp===2)tg.push('<span class="tag hot">매운맛</span>');else if(sp===0&&c)tg.push('<span class="tag">안 매움</span>');
@@ -599,7 +612,7 @@ function renderBody(){
   if(st.sel>=0)h+=cardHTML(st.sel);
   if(st.picks){h+=`<div class="sec pick3"><div class="pickhead"><h2>이 중에서 골라봤어요</h2><button class="btn" type="button" data-reroll>다시 뽑기</button></div>${st.picks.map(i=>itemHTML(i)).join("")}</div>`}
   if(st.place&&st.place[0]==="u"&&!st.picks&&(UNIS[+st.place.slice(1)].picks.length||!KS.on)){const u=UNIS[+st.place.slice(1)];const ps=u.picks.filter(p=>MASK[p.i]);
-    if(ps.length||!KS.on)h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
+    if(ps.length||!KS.on)h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i)).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
   if(KS.on&&!st.q)h+=kSecHTML();
   if(st.q){const res=[];for(let i=0;i<N&&res.length<100;i++)if(MASK[i])res.push(i);
     h+=`<div class="sec"><h2>검색 결과 <small>${total.toLocaleString()}곳</small></h2>${res.length?res.map(i=>itemHTML(i)).join(""):`<div class="empty">찾는 가게가 없어요.${st.all?"":"<br>'전체 가게'를 켜면 서울 음식점 전체에서 찾아요."}</div>`}</div>`}
@@ -673,7 +686,7 @@ function kSelect(j,fromMap){KS.sel=KS.sel===j?-1:j;st.sel=-1;
     if(st.sheet==="peek")setSheet("half");$("body").scrollTop=0}
   draw();bodySoon()}
 function kSecHTML(){
-  const items=KS.list.map((d,j)=>`<button class="item${j===KS.sel?" sel":""}" type="button" data-k="${j}"><i class="kmk" style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i><span class="nm">${esc(d.n)}</span><span class="side">${d.dist?(d.dist<1000?d.dist+"m":(d.dist/1000).toFixed(1)+"km"):""}</span><span class="sub">${esc(d.cat)}</span></button>`).join("");
+  const items=KS.list.map((d,j)=>`<button class="item${j===KS.sel?" sel":""}" type="button" data-k="${j}"><i class="kmk" style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i><span class="nm">${esc(d.n)}</span><span class="side">${(()=>{const rp=refPt();return rp?distTxt(Math.hypot((d.la-rp[0])*111000,(d.ln-rp[1])*88000)):""})()}</span><span class="sub">${esc(d.cat)}</span></button>`).join("");
   return `<div class="sec"><h2>카카오맵에서 찾은 집 <small>${KS.list.length}곳</small></h2><p class="ksrc">'${esc(KS.q)}' 카카오맵 검색 결과예요. 지도에선 <b>네모 핀</b>이에요. (동그라미 핀은 골목밥 추천·등록 가게)</p>${items||(KS.busy?`<div class="empty">카카오맵에서 찾는 중…</div>`:`<div class="empty">카카오맵에서도 딱 맞는 집을 못 찾았어요.</div>`)}${KS.more?`<button class="btn" type="button" data-kmore style="justify-content:center">${KS.busy?"불러오는 중…":"더 보기"}</button>`:""}</div>`}
 function kCardHTML(d){const tel=(d.ph||"").replace(/[^0-9]/g,"");
   return `<div class="card">
@@ -728,7 +741,7 @@ async function openShared(){
 }
 
 /* ---------- 단계별 고르기: 어디서 → 뭐 → 메뉴 → 맵기 → 지도 ---------- */
-const W={step:0,ptab:"area",place:null,c1:null,sub:null,sp:"all"};
+const W={step:0,ptab:"uni",place:null,c1:null,sub:null,sp:"all"};
 const WSTEPS=3;
 function wPlaceList(t){
   if(t==="uni")return UNIS.map((u,i)=>({k:"u"+i,t:u.u.split("·")[0],la:u.lat,ln:u.lng}));
