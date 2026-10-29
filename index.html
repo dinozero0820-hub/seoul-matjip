@@ -177,10 +177,10 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .ov-kp.sel i{width:28px;height:28px;font-size:13px}
 .ov-kp span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .kmk{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;box-shadow:0 0 0 1.5px var(--ink) inset}
-.legend{position:fixed;z-index:20;left:12px;display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:12px;box-shadow:var(--sh);top:158px}
+.legend{position:fixed;z-index:15;pointer-events:none;left:12px;display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:12px;box-shadow:var(--sh);top:158px}
 .legend i{display:inline-block;width:12px;height:12px;margin-right:4px;vertical-align:-1px;background:var(--muted)}
 .legend .c{border-radius:50%}.legend .q{border-radius:3px;box-shadow:0 0 0 1.5px var(--ink)}
-@media (min-width:900px){.legend{left:444px;top:118px}}
+@media (min-width:900px){.legend{left:444px;top:158px}}
 .ksrc{font-size:12px;color:var(--muted);margin:-2px 0 2px}
 .ov-uni{font-family:var(--f-body);font-size:12px;font-weight:700;color:#1B2220;background:#FFF6DF;border:1px solid #E5D6AE;border-radius:6px;padding:2px 7px;white-space:nowrap;pointer-events:none}
 
@@ -648,7 +648,7 @@ function kStart(){
   const c=t==="u"?[UNIS[n].lat,UNIS[n].lng]:t==="a"?[AREAS[n][1],AREAS[n][2]]:GCENT[n];
   const where=t==="u"?UNIS[n].u.split("·")[0]:t==="a"?AREAS[n][0]:META.gu[n];
   KS.q=`${where} ${kwOf()}`;
-  KS.opt={location:LL(c[0],c[1]),radius:t==="g"?4000:1500,sort:kakao.maps.services.SortBy.ACCURACY,
+  KS.opt={location:LL(c[0],c[1]),radius:t==="g"?4000:Math.round(1500*radOf(W.place)),sort:kakao.maps.services.SortBy.ACCURACY,
     category_group_code:W.c1!=null&&META.c1[W.c1]==="카페·디저트"?"CE7":"FD6"};
   KS.on=true;$("legend").hidden=false;
   const gs=new Set();for(let i=0;i<N;i++)if(Math.abs(LAT[i]-c[0])<0.02&&Math.abs(LNG[i]-c[1])<0.025)gs.add(G[i]);
@@ -737,8 +737,12 @@ function wPlaceList(t){
 }
 function inPlace(i,k){if(!k)return true;const t=k[0],n=+k.slice(1);
   if(t==="g")return G[i]===n;
+  const c=t==="u"?[UNIS[n].lat,UNIS[n].lng]:[AREAS[n][1],AREAS[n][2]],r=radOf(k);
+  return Math.abs(LAT[i]-c[0])<0.0095*r&&Math.abs(LNG[i]-c[1])<0.012*r}
+const RAD={};function radOf(k){if(RAD[k])return RAD[k];const t=k[0],n=+k.slice(1);if(t==="g")return 1;
   const c=t==="u"?[UNIS[n].lat,UNIS[n].lng]:[AREAS[n][1],AREAS[n][2]];
-  return Math.abs(LAT[i]-c[0])<0.0095&&Math.abs(LNG[i]-c[1])<0.012}
+  for(const r of [1,1.5,2,2.5,3]){let m=0;for(let i=0;i<N;i++)if(C[i]!==8&&Math.abs(LAT[i]-c[0])<0.0095*r&&Math.abs(LNG[i]-c[1])<0.012*r)m++;if(m>=60)return RAD[k]=r}
+  return RAD[k]=3}
 let SC={};function starCounts(t){if(SC[t])return SC[t];
   let out;if(t==="uni")out=UNIS.map(u=>u.picks.length);
   else if(t==="gu"){out=META.gu.map(()=>0);for(let i=0;i<N;i++)if(isStar(i))out[G[i]]++}
@@ -763,14 +767,16 @@ function wRender(){
     const where=W.place?placeName(W.place):"서울 전체";
     $("wq").textContent="뭐 먹을까요?";$("wsub").textContent=`${where}에서 고를게요.`;
     const base=i=>inPlace(i,W.place);
-    g.append(wOpt("아무거나",fmt(wCount(base))+"곳",()=>{W.c1=null;W.sub=null;W.sp="all";wApply()},"any"));
+    const lab=n=>n?fmt(n)+"곳":(W.place?"카카오맵 검색":"0곳"),zc=n=>n||W.place?"":"zero";
+    g.append(wOpt("아무거나",lab(wCount(base)),()=>{W.c1=null;W.sub=null;W.sp="all";wApply()},"any"));
     META.c1.forEach((k,ci)=>{if(k==="기타")return;const n=wCount(i=>C[i]===ci&&base(i));
-      g.append(wOpt(k,fmt(n)+"곳",()=>{W.c1=ci;W.sub=null;W.sp="all";if(META.sub[ci].length){W.step=2;wRender()}else wApply()},n?"":"zero",`--k${ci+1}`))});
+      g.append(wOpt(k,lab(n),()=>{W.c1=ci;W.sub=null;W.sp="all";if(META.sub[ci].length){W.step=2;wRender()}else wApply()},zc(n),`--k${ci+1}`))});
   }else if(W.step===2){
     const ci=W.c1;$("wq").textContent=`${META.c1[ci]} 중에서 뭐가 끌려요?`;$("wsub").textContent="하나 골라도 되고, 다 좋아도 돼요.";
     const base=i=>C[i]===ci&&inPlace(i,W.place);
-    g.append(wOpt(`${META.c1[ci]} 다 좋아요`,fmt(wCount(base))+"곳",()=>{W.sub=null;W.sp="all";wApply()},"any"));
-    META.sub[ci].forEach((sk,b)=>{const n=wCount(i=>base(i)&&(S[i]&(1<<b)));g.append(wOpt(sk,fmt(n)+"곳",()=>{W.sub=b;W.sp="all";wApply()},n?"":"zero"))});
+    const lab=n=>n?fmt(n)+"곳":(W.place?"카카오맵 검색":"0곳"),zc=n=>n||W.place?"":"zero";
+    g.append(wOpt(`${META.c1[ci]} 다 좋아요`,lab(wCount(base)),()=>{W.sub=null;W.sp="all";wApply()},"any"));
+    META.sub[ci].forEach((sk,b)=>{const n=wCount(i=>base(i)&&(S[i]&(1<<b)));g.append(wOpt(sk,lab(n),()=>{W.sub=b;W.sp="all";wApply()},zc(n)))});
   }else{
     $("wq").textContent="매운 거 괜찮아요?";$("wsub").textContent="맵기는 가게 이름과 메뉴로 판단해요. 확인 안 된 집은 '안 매운 거'에 같이 나와요.";
     g.className="wgrid one";
