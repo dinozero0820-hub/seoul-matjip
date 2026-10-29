@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
 <title>서울 맛집 지도</title>
 <meta name="description" content="대학가·상권별로 검수한 서울 맛집 지도. 음식 종류, 메뉴, 맵기, 혼밥·가격으로 골라 보세요.">
 <meta property="og:title" content="서울 맛집 지도">
@@ -68,7 +68,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .fab{appearance:none;width:42px;height:42px;border-radius:12px;border:0;background:var(--surface);box-shadow:var(--sh);font-size:20px;cursor:pointer;display:grid;place-items:center}
 .fab.txt{font-size:12px;font-weight:700}
 .crumb{position:fixed;z-index:15;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 112px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;border-radius:999px;padding:5px 12px;box-shadow:var(--sh);pointer-events:none;white-space:nowrap;max-width:60vw;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:899px){.fab:not(.txt){display:none}.fabs{top:calc(env(safe-area-inset-top,0px) + 118px)}.crumb{top:calc(env(safe-area-inset-top,0px) + 112px)}}
+@media (max-width:899px){.fab{width:40px;height:40px}.fabs{top:calc(env(safe-area-inset-top,0px) + 118px)}.crumb{top:calc(env(safe-area-inset-top,0px) + 112px)}}
 @media (min-width:900px){.crumb{left:calc(50% + 216px)}.fabs{top:16px}}
 
 /* 아래 시트 */
@@ -163,7 +163,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .ov-cl b{display:grid;place-items:center;border-radius:50%;background:rgba(27,34,32,.86);color:#fff;font-size:12px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,.25);border:2px solid #fff}
 .ov-pin{display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--f-body);transform:translateX(calc(50% - 9px))}
 .ov-pin i{position:relative;width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center;flex:none}
-.ov-pin i::after{content:"";position:absolute;inset:-12px;border-radius:50%}
+.ov-pin i::after{content:"";position:absolute;inset:-8px;border-radius:50%}
 .ov-pin.star i{width:28px;height:28px;font-size:12px}
 .ov-pin.fav i{box-shadow:0 0 0 3px #E0412B,0 1px 3px rgba(0,0,0,.35)}
 .ov-pin.sel i{width:32px;height:32px;border-color:#1B2220;border-width:3px;font-size:14px}
@@ -407,13 +407,15 @@ function loadKakao(){return new Promise((res,rej)=>{
 const LL=(la,ln)=>new kakao.maps.LatLng(la,ln);
 function initMap(){
   map=new kakao.maps.Map($("kmap"),{center:LL(37.5560,126.9860),level:9,maxLevel:11});
+  try{map.setZoomable(true);map.setDraggable(true)}catch(e){}
   try{map.setCopyrightPosition(kakao.maps.CopyrightPosition.BOTTOMRIGHT,true)}catch(e){}
   kakao.maps.event.addListener(map,"idle",()=>{draw();bodySoon()});
-  kakao.maps.event.addListener(map,"click",()=>{if(st.sel>=0){st.sel=-1;draw();bodySoon()}});
+  kakao.maps.event.addListener(map,"click",()=>{if(Date.now()-lastTap<500)return;if(st.sel>=0){st.sel=-1;draw();bodySoon()}});
 }
 let raf=0;function draw(){if(!map)return;if(!raf)raf=requestAnimationFrame(()=>{raf=0;paint()})}
-function addOv(la,ln,el,z,ya){const o=new kakao.maps.CustomOverlay({position:LL(la,ln),content:el,xAnchor:.5,yAnchor:ya??.5,zIndex:z||1,clickable:true});o.setMap(map);OV.push(o)}
-function mk(cls,html,on){const d=document.createElement("div");d.className=cls;d.innerHTML=html;if(on)d.addEventListener("click",e=>{e.stopPropagation();on()});return d}
+function addOv(la,ln,el,z,ya){const o=new kakao.maps.CustomOverlay({position:LL(la,ln),content:el,xAnchor:.5,yAnchor:ya??.5,zIndex:z||1,clickable:false});o.setMap(map);OV.push(o)}
+let lastTap=0;
+function mk(cls,html,on){const d=document.createElement("div");d.className=cls;d.innerHTML=html;if(on)d.addEventListener("click",e=>{lastTap=Date.now();e.stopPropagation();on()});return d}
 function readBounds(){const b=map.getBounds(),sw=b.getSouthWest(),ne=b.getNorthEast();BB={s:sw.getLat(),w:sw.getLng(),n:ne.getLat(),e:ne.getLng()}}
 const inView=(i,p=0)=>LAT[i]>=BB.s-p&&LAT[i]<=BB.n+p&&LNG[i]>=BB.w-p&&LNG[i]<=BB.e+p;
 function px(la,ln){try{const pt=map.getProjection().containerPointFromCoords(LL(la,ln));return [pt.x,pt.y]}catch(e){return null}}
