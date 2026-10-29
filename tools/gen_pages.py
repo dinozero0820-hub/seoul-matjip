@@ -67,9 +67,9 @@ for u in unis:
 {('<div class="t">'+''.join('<span>'+e(t)+'</span>' for t in tags)+'</div>') if tags else ''}
 <div class="a">{e(c[6])}</div>
 <div class="links"><a href="{share}">지도에서 보기</a><a href="https://map.kakao.com/link/to/{quote(nm)},{LAT[i]:.6f},{LNG[i]:.6f}" rel="noopener">길찾기</a></div></li>""")
-    title=f"{short} 맛집 추천 {len(items)}곳 · 근처 밥집 지도"
+    title=f"{short} 맛집 추천 {len(items)}곳 · 골목밥"
     desc=f"{name} 근처 맛집 {len(items)}곳. 대표 메뉴, 가격, 맵기, 혼밥·단체·데이트 정보를 한눈에. "+", ".join(clean(CUR[p['i']][5]) for p in u['picks'][:5])
-    body=f"""<a class="brand" href="{BASE}">서울 맛집 지도</a>
+    body=f"""<a class="brand" href="{BASE}">골목밥</a>
 <h1>{e(short)} 근처 맛집 추천 {len(items)}곳</h1>
 <p class="lead">{e(name)} 근처에서 메뉴·가격·맵기를 확인한 집만 모았어요. 혼밥, 늦게까지, 단체, 데이트 조건은 지도에서 바로 걸러볼 수 있어요.</p>
 <a class="cta" href="{BASE}?u={u['slug']}">지도에서 {e(short)} 맛집 보기</a>
@@ -78,8 +78,8 @@ for u in unis:
     os.makedirs(f"{OUT}/u/{u['slug']}",exist_ok=True)
     open(f"{OUT}/u/{u['slug']}/index.html","w").write(page(title,desc,f"{BASE}u/{u['slug']}/",body))
 hub="".join(f'<a href="{BASE}u/{u["slug"]}/"><b>{e(u["u"].split("·")[0])}</b><span>추천 {len(u["picks"])}곳</span></a>' for u in unis)
-open(f"{OUT}/u/index.html","w").write(page("대학가 맛집 추천 · 서울 맛집 지도","서울 주요 대학 근처 맛집을 학교별로 모았어요. 연세대, 홍대, 고려대, 경희대 등.",f"{BASE}u/",
- f'<a class="brand" href="{BASE}">서울 맛집 지도</a><h1>학교별 맛집 추천</h1><p class="lead">학교를 고르면 근처에서 확인된 맛집을 보여드려요.</p><div class="unis">{hub}</div><a class="cta" href="{BASE}">지도 열기</a>'))
+open(f"{OUT}/u/index.html","w").write(page("대학가 맛집 추천 · 골목밥","서울 주요 대학 근처 맛집을 학교별로 모았어요. 연세대, 홍대, 고려대, 경희대 등.",f"{BASE}u/",
+ f'<a class="brand" href="{BASE}">골목밥</a><h1>학교별 맛집 추천</h1><p class="lead">학교를 고르면 근처에서 확인된 맛집을 보여드려요.</p><div class="unis">{hub}</div><a class="cta" href="{BASE}">지도 열기</a>'))
 urls=[BASE,BASE+"u/"]+[f"{BASE}u/{u['slug']}/" for u in unis]
 open(f"{OUT}/sitemap.xml","w").write('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+"".join(f"<url><loc>{x}</loc><lastmod>{d['v']}</lastmod></url>\n" for x in urls)+"</urlset>\n")
 open(f"{OUT}/robots.txt","w").write(f"User-agent: *\nAllow: /\nSitemap: {BASE}sitemap.xml\n")

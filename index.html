@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="naver-site-verification" content="bc917ecadd62373d2bf3c14c40de4095c6bf7719" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>서울 맛집 지도</title>
-<meta name="description" content="대학가·상권별로 검수한 서울 맛집 지도. 음식 종류, 메뉴, 맵기, 혼밥·가격으로 골라 보세요.">
-<meta property="og:title" content="서울 맛집 지도">
+<title>골목밥 · 대학가 맛집 지도</title>
+<meta name="description" content="골목밥 · 대학가·동네별로 검수한 서울 맛집 지도. 음식 종류, 메뉴, 맵기, 혼밥·가격으로 골라 보세요.">
+<meta property="og:title" content="골목밥 · 대학가 맛집 지도">
 <meta property="og:description" content="오늘 뭐 먹지? 대학가 근처 검수된 맛집을 지도에서 바로 찾아보세요.">
 <meta name="theme-color" content="#E0412B">
 <link rel="manifest" href="manifest.webmanifest">
@@ -194,12 +194,12 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </style>
 </head>
 <body>
-<noscript><h1>서울 맛집 지도</h1><ul><li><a href="u/yonsei/">연세대·신촌 맛집 추천</a></li><li><a href="u/ewha/">이화여대 맛집 추천</a></li><li><a href="u/hongik/">홍익대 맛집 추천</a></li><li><a href="u/korea/">고려대 맛집 추천</a></li><li><a href="u/skku/">성균관대·혜화 맛집 추천</a></li><li><a href="u/hanyang/">한양대 맛집 추천</a></li><li><a href="u/konkuk/">건국대 맛집 추천</a></li><li><a href="u/cau/">중앙대 맛집 추천</a></li><li><a href="u/snu/">서울대입구·샤로수길 맛집 추천</a></li><li><a href="u/khu/">경희대 맛집 추천</a></li></ul></noscript>
-<div id="kmap" aria-label="서울 맛집 카카오맵"></div>
+<noscript><h1>골목밥 · 서울 대학가 맛집 지도</h1><ul><li><a href="u/yonsei/">연세대·신촌 맛집 추천</a></li><li><a href="u/ewha/">이화여대 맛집 추천</a></li><li><a href="u/hongik/">홍익대 맛집 추천</a></li><li><a href="u/korea/">고려대 맛집 추천</a></li><li><a href="u/skku/">성균관대·혜화 맛집 추천</a></li><li><a href="u/hanyang/">한양대 맛집 추천</a></li><li><a href="u/konkuk/">건국대 맛집 추천</a></li><li><a href="u/cau/">중앙대 맛집 추천</a></li><li><a href="u/snu/">서울대입구·샤로수길 맛집 추천</a></li><li><a href="u/khu/">경희대 맛집 추천</a></li></ul></noscript>
+<div id="kmap" aria-label="골목밥 맛집 지도"></div>
 
 <div class="top">
   <div class="bar">
-    <span class="brand">서울 맛집</span>
+    <span class="brand">골목밥</span>
     <input id="q" type="search" placeholder="가게 이름 검색" autocomplete="off" aria-label="가게 이름 검색">
     <button class="clear" id="qclear" type="button" aria-label="검색어 지우기" hidden>✕</button>
   </div>
@@ -243,7 +243,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <h2 id="onbt">어느 학교 근처에서<br>먹을 곳 찾아요?</h2><p>메뉴·가격·맵기를 확인한 추천 집을 바로 보여드려요.</p>
   <div class="unis" id="onbu"></div><button class="skip" id="onbskip" type="button">서울 전체 둘러볼게요</button><a class="skip" id="crawl" href="u/" style="text-align:center">학교별 맛집 목록 보기</a><a class="skip" id="onbreco" hidden target="_blank" rel="noopener" style="text-align:center">우리 학교가 없어요 · 맛집 추천하기</a></div></div>
 <div class="toast" id="toast" hidden role="status"></div>
-<div class="loading" id="loading"><div><b>서울 맛집</b>맛집 지도를 불러오는 중…</div></div>
+<div class="loading" id="loading"><div><b>골목밥</b>학교 앞 맛집 지도를 불러오는 중…</div></div>
 
 <script src="config.js"></script>
 <script>(function(){var c=(window.GOATCOUNTER||"").trim();if(!c)return;var s=document.createElement("script");s.async=true;s.src="https://gc.zgo.at/count.js";s.dataset.goatcounter="https://"+c+".goatcounter.com/count";document.head.appendChild(s)})();</script>
@@ -609,7 +609,7 @@ Promise.all([load(),loadKakao()]).then(()=>{
   if(qu){const i=UNIS.findIndex(u=>u.slug===qu||u.u.startsWith(qu));if(i>=0){st.mode="uni";choose("u"+i);history.replaceState(null,"",location.pathname)}}
   else if(!new URLSearchParams(location.search).get("at")){let seen=false;try{seen=!!localStorage.getItem("seoul-onb")}catch(e){}if(!seen)showOnb()}
   openShared();
-}).catch(err=>{console.error(err);$("loading").innerHTML="<div><b>서울 맛집</b>"+(err.message==="NOKEY"?"카카오 키 설정(config.js)이 필요해요.":err.message==="LOADFAIL"?"카카오맵을 불러오지 못했어요.<br>잠시 후 새로고침해 주세요.":"데이터를 불러오지 못했어요.<br>잠시 후 새로고침해 주세요.")+"</div>"});
+}).catch(err=>{console.error(err);$("loading").innerHTML="<div><b>골목밥</b>"+(err.message==="NOKEY"?"카카오 키 설정(config.js)이 필요해요.":err.message==="LOADFAIL"?"카카오맵을 불러오지 못했어요.<br>잠시 후 새로고침해 주세요.":"데이터를 불러오지 못했어요.<br>잠시 후 새로고침해 주세요.")+"</div>"});
 })();
 </script>
 </body>
