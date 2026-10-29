@@ -240,7 +240,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 
 <div class="onb" id="onb" hidden role="dialog" aria-modal="true" aria-labelledby="onbt"><div class="in">
   <h2 id="onbt">어느 학교 근처에서<br>먹을 곳 찾아요?</h2><p>메뉴·가격·맵기를 확인한 추천 집을 바로 보여드려요.</p>
-  <div class="unis" id="onbu"></div><button class="skip" id="onbskip" type="button">서울 전체 둘러볼게요</button><a class="skip" id="crawl" href="u/" style="text-align:center">학교별 맛집 목록 보기</a></div></div>
+  <div class="unis" id="onbu"></div><button class="skip" id="onbskip" type="button">서울 전체 둘러볼게요</button><a class="skip" id="crawl" href="u/" style="text-align:center">학교별 맛집 목록 보기</a><a class="skip" id="onbreco" hidden target="_blank" rel="noopener" style="text-align:center">우리 학교가 없어요 · 맛집 추천하기</a></div></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <div class="loading" id="loading"><div><b>서울 맛집</b>맛집 지도를 불러오는 중…</div></div>
 
@@ -264,7 +264,7 @@ const SIT=[{k:"cheap",t:"1만원 이하"},{k:"s",t:"혼밥"},{k:"l",t:"늦게까
 const SPT=[{k:"all",t:"상관없음"},{k:"mild",t:"매운 집 빼기"},{k:"hot",t:"매운 집만"}];
 const TAGN={s:"혼밥",l:"늦게까지",g:"단체",d:"데이트",w:"줄 서는 편"};
 
-let FAV=[],FAVI=new Set(),REPORT=(window.REPORT_URL||"").trim();
+let FAV=[],FAVI=new Set(),REPORT=(window.REPORT_URL||"").trim(),RECO=(window.RECOMMEND_URL||window.REPORT_URL||"").trim();
 try{FAV=JSON.parse(localStorage.getItem("seoul-fav")||"[]")}catch(e){}
 const saveFav=()=>{try{localStorage.setItem("seoul-fav",JSON.stringify(FAV))}catch(e){}};
 let META,N=0,LNG,LAT,C,S,P,G,LI,MASK,GOFF=[],GCENT=[],UNIS=[],CUR={};
@@ -518,7 +518,7 @@ function renderBody(){
   if(st.sel>=0)h+=cardHTML(st.sel);
   if(st.picks){h+=`<div class="sec pick3"><div class="pickhead"><h2>오늘은 여기 어때요?</h2><button class="btn" type="button" data-reroll>다시 뽑기</button></div>${st.picks.map(i=>itemHTML(i)).join("")}</div>`}
   if(st.place&&st.place[0]==="u"&&!st.picks){const u=UNIS[+st.place.slice(1)];const ps=u.picks.filter(p=>MASK[p.i]);
-    h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
+    h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
   if(st.q){const res=[];for(let i=0;i<N&&res.length<100;i++)if(MASK[i])res.push(i);
     h+=`<div class="sec"><h2>검색 결과 <small>${total.toLocaleString()}곳</small></h2>${res.length?res.map(i=>itemHTML(i)).join(""):`<div class="empty">찾는 가게가 없어요.${st.all?"":"<br>'전체 가게'를 켜면 서울 음식점 전체에서 찾아요."}</div>`}</div>`}
   else{const vis=[];for(let i=0;i<N;i++)if(MASK[i]&&inView(i))vis.push(i);
@@ -574,6 +574,7 @@ async function openShared(){
 
 /* ---------- 첫 방문 ---------- */
 function showOnb(){const el=$("onbu");el.innerHTML=UNIS.map((u,i)=>`<button type="button" data-u="${i}"><b>${esc(u.u.split("·")[0])}</b><span>추천 ${u.picks.length}곳</span></button>`).join("");
+  if(RECO){$("onbreco").href=RECO;$("onbreco").hidden=false}
   $("onb").hidden=false;const done=()=>{$("onb").hidden=true;try{localStorage.setItem("seoul-onb","1")}catch(e){}};
   el.querySelectorAll("button").forEach(b=>b.onclick=()=>{done();st.mode="uni";choose("u"+b.dataset.u)});$("onbskip").onclick=done}
 
