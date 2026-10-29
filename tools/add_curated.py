@@ -93,3 +93,4 @@ if miss:
     print("반영 못 한 항목:")
     for m in miss: print("  ", *m)
 os.system(f'python3 "{P("tools","gen_pages.py")}"')
+os.system(f'python3 "{P("tools","build_app.py")}"')

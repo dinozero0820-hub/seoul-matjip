@@ -174,20 +174,22 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 .ov-pin{display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--f-body);transform:translateX(calc(50% - 9px))}
 .ov-pin i{position:relative;width:16px;height:16px;border-radius:50%;border:2px solid #fff;box-shadow:0 1px 3px rgba(0,0,0,.35);color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center;flex:none}
 .ov-pin i::after{content:"";position:absolute;inset:-8px;border-radius:50%}
-.ov-pin.star i{width:28px;height:28px;font-size:12px}
+.ov-pin.star i{width:28px;height:28px;font-size:12px;box-shadow:0 0 0 2px #F5B700,0 1px 4px rgba(0,0,0,.4)}
+.ov-pin.star i::before{content:"★";position:absolute;top:-9px;right:-9px;width:15px;height:15px;border-radius:50%;background:#F5B700;color:#fff;font-size:10px;line-height:15px;text-align:center;border:1.5px solid #fff}
+.tag.star{background:#FFF4CC;color:#8A6400;border-color:#F5B700;font-weight:700}
 .ov-pin.fav i{box-shadow:0 0 0 3px #E0412B,0 1px 3px rgba(0,0,0,.35)}
 .ov-pin.sel i{width:32px;height:32px;border-color:#1B2220;border-width:3px;font-size:14px}
 .ov-pin span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .ov-pin.pick i{outline:3px solid #E0412B;outline-offset:2px}
 .ov-kp{display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--f-body);transform:translateX(calc(50% - 9px))}
-.ov-kp i{position:relative;width:21px;height:21px;border-radius:2px;border:2px solid #fff;box-shadow:0 0 0 2.5px #FFCD00,0 1px 4px rgba(0,0,0,.4);flex:none;color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center}
+.ov-kp i{position:relative;width:21px;height:21px;border-radius:2px;border:2px solid #fff;box-shadow:0 0 0 2px #1B2220,0 1px 4px rgba(0,0,0,.4);flex:none;color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center}
 .ov-kp i::after{content:"";position:absolute;inset:-8px}
 .ov-kp.sel i{width:28px;height:28px;font-size:13px}
 .ov-kp span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
-.kmk{width:26px;height:26px;border-radius:3px;outline:2.5px solid #FFCD00;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;}
+.kmk{width:26px;height:26px;border-radius:3px;outline:2px solid #1B2220;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;}
 .legend{position:fixed;z-index:15;pointer-events:none;left:12px;display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:12px;box-shadow:var(--sh);top:158px}
 .legend i{display:inline-block;width:12px;height:12px;margin-right:4px;vertical-align:-1px;background:var(--muted)}
-.legend .c{border-radius:50%;background:#E0412B}.legend .q{border-radius:1px;background:#E0412B;box-shadow:0 0 0 2px #FFCD00}
+.legend .c{border-radius:50%;background:#E0412B}.legend .s{border-radius:50%;background:#F5B700;color:#fff;font-size:9px;font-style:normal;text-align:center;line-height:12px}.legend .q{border-radius:1px;background:#E0412B;box-shadow:0 0 0 2px #1B2220}
 @media (min-width:900px){.legend{left:444px;top:158px}}
 .ksrc{font-size:12px;color:var(--muted);margin:-2px 0 2px}
 .ov-uni{font-family:var(--f-body);font-size:13px;font-weight:800;color:#fff;background:#2B4C8C;border:2px solid #fff;border-radius:999px;padding:3px 10px 3px 8px;white-space:nowrap;pointer-events:none;box-shadow:0 2px 6px rgba(0,0,0,.35)}
@@ -307,7 +309,7 @@ html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
   <div class="wgrid" id="wgrid"></div>
   <div class="wfoot"><button class="wskip" id="wskip" type="button">그냥 지도 볼게요</button><a class="wskip" id="wreco" hidden target="_blank" rel="noopener">맛집 추천하기</a></div>
 </div></div>
-<div class="legend" id="legend" hidden><span><i class="c"></i>골목밥 가게</span><span><i class="q"></i>카카오맵 검색</span></div>
+<div class="legend" id="legend" hidden><span><i class="s">★</i>골목밥 추천</span><span><i class="c"></i>일반 가게</span><span><i class="q"></i>카카오맵 검색</span></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <div class="loading" id="loading"><div><b>골목밥</b>학교 앞 맛집 지도를 불러오는 중…</div></div>
 
@@ -341,14 +343,22 @@ try{const s=JSON.parse(localStorage.getItem("seoul-app1")||"null");if(s){st.c1=n
 const save=()=>{try{localStorage.setItem("seoul-app1",JSON.stringify({c1:[...st.c1],c2:[...st.c2],sp:st.sp,sit:[...st.sit],all:st.all,mode:st.mode}))}catch(e){}};
 
 /* ---------- 데이터 ---------- */
+async function gzBytes(url){const r=await fetch(url);if(!r.ok)throw new Error(url);const b=new Uint8Array(await r.arrayBuffer());
+  if(b[0]!==0x1f||b[1]!==0x8b)return b;if(!window.DecompressionStream)throw new Error("nods");
+  return new Uint8Array(await new Response(new Blob([b]).stream().pipeThrough(new DecompressionStream("gzip"))).arrayBuffer())}
+let SLIM=true;
 async function load(){
-  META=await (await fetch("pts.json")).json();
-  const bin=atob(META.b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
-  const dv=new DataView(u.buffer);N=u.length/8;
+  let u=null;
+  try{const [m,b]=await Promise.all([fetch("m.json").then(r=>{if(!r.ok)throw 0;return r.json()}),gzBytes("p.gz")]);META=m;u=b}catch(e){SLIM=false}
+  if(SLIM){N=META.n}else{META=await (await fetch("pts.json")).json();const bin=atob(META.b);u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);N=u.length/8}
   LNG=new Float64Array(N);LAT=new Float64Array(N);C=new Uint8Array(N);S=new Uint16Array(N);P=new Uint8Array(N);G=new Uint8Array(N);LI=new Uint32Array(N);MASK=new Uint8Array(N);
   let g=0,acc=0;GOFF=[0];META.cnt.forEach(c=>{acc+=c;GOFF.push(acc)});
+  if(SLIM){let o=0,x=0,y=0;const rd=()=>{let v=0,sh=0,b;do{b=u[o++];v+=(b&127)*Math.pow(2,sh);sh+=7}while(b&128);return (v%2)?-(v+1)/2:v/2};
+    for(let i=0;i<N;i++){x+=rd();y+=rd();LNG[i]=META.ln0+x/1e5;LAT[i]=META.la0+y/1e5}
+    for(let i=0;i<N;i++){C[i]=u[o+i];S[i]=u[o+N+i]|(u[o+2*N+i]<<8);P[i]=u[o+3*N+i];while(i>=GOFF[g+1])g++;G[i]=g;LI[i]=i-GOFF[g]}}
+  else{const dv=new DataView(u.buffer);
   for(let i=0,o=0;i<N;i++,o+=8){LNG[i]=META.ln0+dv.getUint16(o,true)/1e5;LAT[i]=META.la0+dv.getUint16(o+2,true)/1e5;C[i]=u[o+4];S[i]=dv.getUint16(o+5,true);P[i]=u[o+7];
-    while(i>=GOFF[g+1])g++;G[i]=g;LI[i]=i-GOFF[g]}
+    while(i>=GOFF[g+1])g++;G[i]=g;LI[i]=i-GOFF[g]}}
   GCENT=META.gu.map((n,gi)=>{const la=[],ln=[];for(let i=GOFF[gi];i<GOFF[gi+1];i++){la.push(LAT[i]);ln.push(LNG[i])}
     la.sort((a,b)=>a-b);ln.sort((a,b)=>a-b);return [la[la.length>>1],ln[ln.length>>1]]});
   UNIS=META.unis.slice().sort((a,b)=>a.u.localeCompare(b.u,"ko"));
@@ -357,7 +367,8 @@ async function load(){
 function loadGu(gi){
   if(names.has(gi))return Promise.resolve(names.get(gi));
   if(pending.has(gi))return pending.get(gi);
-  const p=fetch(`gu/${gi}.json`).then(r=>r.json()).then(j=>{names.set(gi,j);pending.delete(gi);return j});
+  const p=(SLIM?gzBytes(`n/${gi}.gz`).then(b=>JSON.parse(new TextDecoder().decode(b)).map(r=>[r[0],r[1],"",r[2]])).catch(()=>fetch(`gu/${gi}.json`).then(r=>r.json()))
+    :fetch(`gu/${gi}.json`).then(r=>r.json())).then(j=>{names.set(gi,j);pending.delete(gi);return j});
   pending.set(gi,p);return p;
 }
 const nm=i=>names.get(G[i])?.[LI[i]]||(CUR[i]?[CUR[i][5],CUR[i][6],"",CUR[i][7]||""]:undefined);
@@ -583,7 +594,7 @@ const distTxt=m=>m<1000?Math.round(m/10)*10+"m":(m/1000).toFixed(1)+"km";
 function itemHTML(i,extra){const r=nm(i),c=cur(i),t=tagsOf(i),sp=P[i]&3;
   const rp=refPt(),dist=rp?distTxt(Math.hypot((LAT[i]-rp[0])*111000,(LNG[i]-rp[1])*88000)):"";
   const sub=c?esc(c[0])+(c[1]?" · "+won(c[1]):""):(r?`${META.c1[C[i]]} · ${esc(String(r[1]).replace(/\s*\(.*$/,"").replace(/,.*$/,""))}`:"");
-  const tg=[];if(FAVI.has(i))tg.push('<span class="tag hot">♥ 찜</span>');if(sp===2)tg.push('<span class="tag hot">매운맛</span>');t.split("").forEach(k=>TAGN[k]&&tg.push(`<span class="tag">${TAGN[k]}</span>`));
+  const tg=[];if(c)tg.push('<span class="tag star">★ 골목밥 추천</span>');if(FAVI.has(i))tg.push('<span class="tag hot">♥ 찜</span>');if(sp===2)tg.push('<span class="tag hot">매운맛</span>');t.split("").forEach(k=>TAGN[k]&&tg.push(`<span class="tag">${TAGN[k]}</span>`));
   return `<button class="item${i===st.sel?" sel":""}" type="button" data-i="${i}"><i class="mk" style="background:var(--k${C[i]+1})">${GLYPH[C[i]]}</i>
     <span class="nm">${r?esc(clean(r[0])):"…"}</span><span class="side">${dist}</span><span class="sub">${sub}</span>${tg.length?`<span class="tags">${tg.join("")}</span>`:""}</button>`}
 function cardHTML(i){const r=nm(i);if(!r)return `<div class="card"><div class="meta">가게 정보를 불러오는 중…</div></div>`;
