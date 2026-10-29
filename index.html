@@ -75,7 +75,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 /* 아래 시트 */
 .sheet{position:fixed;z-index:30;left:0;right:0;bottom:0;height:86vh;height:86dvh;background:var(--surface);border-radius:20px 20px 0 0;box-shadow:var(--sh2);display:flex;flex-direction:column;
   transform:translateY(calc(86dvh - var(--peek) - env(safe-area-inset-bottom,0px)));transition:transform .28s cubic-bezier(.2,.8,.2,1);padding-bottom:env(safe-area-inset-bottom,0px)}
-.sheet.half{transform:translateY(38dvh)}
+.sheet.half{transform:translateY(50dvh)}
 .sheet.full{transform:translateY(0)}
 @media (prefers-reduced-motion:reduce){.sheet{transition:none}}
 @media (min-width:900px){.sheet{left:12px;right:auto;width:420px;top:118px;bottom:12px;height:auto;border-radius:16px;transform:none!important;box-shadow:var(--sh)}}
@@ -96,7 +96,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .pill{appearance:none;flex:none;border:1px solid var(--line);background:var(--surface);font-size:13px;padding:6px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;min-height:34px}
 .pill[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent);font-weight:700}
 .body{flex:1;overflow:auto;padding:4px 16px 24px;display:grid;align-content:start;gap:14px;overscroll-behavior:contain}
-.sheet.half .body{padding-bottom:40dvh}
+.sheet.half .body{padding-bottom:52dvh}
 @media (min-width:900px){.sheet.half .body{padding-bottom:24px}}
 .sec{display:grid;gap:8px}
 .sec h2{margin:0;font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
@@ -172,11 +172,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .ov-pin span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
 .ov-pin.pick i{outline:3px solid #E0412B;outline-offset:2px}
 .ov-kp{display:flex;align-items:center;gap:4px;cursor:pointer;font-family:var(--f-body);transform:translateX(calc(50% - 9px))}
-.ov-kp i{position:relative;width:18px;height:18px;border-radius:5px;background:#FFE14D;border:2px solid #1B2220;box-shadow:0 1px 3px rgba(0,0,0,.35);flex:none}
+.ov-kp i{position:relative;width:20px;height:20px;border-radius:5px;border:2px solid #fff;box-shadow:0 0 0 1.5px #1B2220,0 1px 3px rgba(0,0,0,.35);flex:none;color:#fff;font-size:11px;font-style:normal;font-weight:700;display:grid;place-items:center}
 .ov-kp i::after{content:"";position:absolute;inset:-8px}
-.ov-kp.sel i{width:26px;height:26px;border-width:3px}
-.ov-kp span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,248,204,.97);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
-.kmk{width:28px;height:28px;border-radius:8px;background:#FFE14D;border:2px solid #1B2220;display:grid;place-items:center;font-size:12px;font-weight:800;color:#1B2220;font-style:normal}
+.ov-kp.sel i{width:28px;height:28px;font-size:13px}
+.ov-kp span{font-size:12px;font-weight:700;color:#1B2220;background:rgba(255,255,255,.95);border-radius:6px;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 3px rgba(0,0,0,.18)}
+.kmk{width:28px;height:28px;border-radius:7px;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;font-style:normal;box-shadow:0 0 0 1.5px var(--ink) inset}
+.legend{position:fixed;z-index:20;left:12px;display:flex;gap:10px;align-items:center;background:var(--surface);border-radius:10px;padding:5px 10px;font-size:12px;box-shadow:var(--sh);top:158px}
+.legend i{display:inline-block;width:12px;height:12px;margin-right:4px;vertical-align:-1px;background:var(--muted)}
+.legend .c{border-radius:50%}.legend .q{border-radius:3px;box-shadow:0 0 0 1.5px var(--ink)}
+@media (min-width:900px){.legend{left:444px;top:118px}}
 .ksrc{font-size:12px;color:var(--muted);margin:-2px 0 2px}
 .ov-uni{font-family:var(--f-body);font-size:12px;font-weight:700;color:#1B2220;background:#FFF6DF;border:1px solid #E5D6AE;border-radius:6px;padding:2px 7px;white-space:nowrap;pointer-events:none}
 
@@ -214,7 +218,8 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .wgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .wgrid.one{grid-template-columns:1fr}
 .wopt{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 12px;text-align:left;cursor:pointer;display:grid;gap:3px;min-height:64px;align-content:center;min-width:0}
-.wopt b{font-size:16px;display:flex;align-items:center;gap:7px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wopt b{font-size:16px;display:flex;align-items:center;gap:7px;min-width:0;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere}
+.wopt span.kk{color:#8A6D00}
 .wopt b i{width:10px;height:10px;border-radius:50%;flex:none}
 .wopt span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
 .wopt.big{min-height:84px}.wopt.big b{font-size:20px}
@@ -289,6 +294,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
   <div class="wgrid" id="wgrid"></div>
   <div class="wfoot"><button class="wskip" id="wskip" type="button">그냥 지도 볼게요</button><a class="wskip" id="wreco" hidden target="_blank" rel="noopener">맛집 추천하기</a></div>
 </div></div>
+<div class="legend" id="legend" hidden><span><i class="c"></i>골목밥 가게</span><span><i class="q"></i>카카오맵 검색</span></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <div class="loading" id="loading"><div><b>골목밥</b>학교 앞 맛집 지도를 불러오는 중…</div></div>
 
@@ -478,7 +484,7 @@ function paint(){
   const pickSet=new Set(st.picks||[]);
   if(LV>=8)paintGu();else if(LV>ZP)paintClusters(pickSet);else paintPins(pickSet);
   if(LV<=7)UNIS.forEach(u=>{if(u.lat>BB.s&&u.lat<BB.n&&u.lng>BB.w&&u.lng<BB.e)addOv(u.lat,u.lng,mk("ov-uni",u.u.split("·")[0]),0,-1.2)});
-  if(LV<=6)KS.list.forEach((d,j)=>{const sel=j===KS.sel;addOv(d.la,d.ln,mk("ov-kp"+(sel?" sel":""),`<i></i>${LV<=4||sel?`<span>${esc(d.n)}</span>`:""}`,()=>kSelect(j,true)),sel?70:30)});
+  if(LV<=6)KS.list.forEach((d,j)=>{const sel=j===KS.sel;addOv(d.la,d.ln,mk("ov-kp"+(sel?" sel":""),`<i style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i>${LV<=4||sel?`<span>${esc(d.n)}</span>`:""}`,()=>kSelect(j,true)),sel?70:30)});
   if(LV<=ZP)needNames();
 }
 function paintGu(){
@@ -511,7 +517,7 @@ function paintPins(pickSet){
 let nameTimer;function needNames(){clearTimeout(nameTimer);nameTimer=setTimeout(()=>{
   const want=new Set();for(let i=0;i<N;i++)if((MASK[i]||isStar(i))&&!names.has(G[i])&&inView(i))want.add(G[i]);
   want.forEach(g=>loadGu(g).then(()=>{draw();bodySoon()}))},120)}
-function offset(){try{if(innerWidth>=900)map.panBy(-216,0);else if(st.sheet!=="peek")map.panBy(0,Math.round(innerHeight*0.22))}catch(e){}}
+function offset(){try{if(innerWidth>=900)map.panBy(-216,0);else if(st.sheet!=="peek")map.panBy(0,Math.round(innerHeight*0.16))}catch(e){}}
 function goTo(lat,lng,level){map.setLevel(level);map.setCenter(LL(lat,lng));offset()}
 function boxTo(la0,ln0,la1,ln1){map.setBounds(new kakao.maps.LatLngBounds(LL(la0,ln0),LL(la1,ln1)))}
 function fitSeoul(){innerWidth<600?goTo(37.5560,126.9860,9):goTo(37.5560,126.9600,8)}
@@ -570,7 +576,7 @@ function renderBody(){
   if(KS.sel>=0&&KS.list[KS.sel])h+=kCardHTML(KS.list[KS.sel]);
   if(st.sel>=0)h+=cardHTML(st.sel);
   if(st.picks){h+=`<div class="sec pick3"><div class="pickhead"><h2>이 중에서 골라봤어요</h2><button class="btn" type="button" data-reroll>다시 뽑기</button></div>${st.picks.map(i=>itemHTML(i)).join("")}</div>`}
-  if(st.place&&st.place[0]==="u"&&!st.picks){const u=UNIS[+st.place.slice(1)];const ps=u.picks.filter(p=>MASK[p.i]);
+  if(st.place&&st.place[0]==="u"&&!st.picks&&(UNIS[+st.place.slice(1)].picks.length||!KS.on)){const u=UNIS[+st.place.slice(1)];const ps=u.picks.filter(p=>MASK[p.i]);
     h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
   if(KS.on&&!st.q)h+=kSecHTML();
   if(st.q){const res=[];for(let i=0;i<N&&res.length<100;i++)if(MASK[i])res.push(i);
@@ -595,7 +601,14 @@ const KS={on:false,q:"",list:[],sel:-1,page:0,more:false,busy:false,opt:null};
 function kwOf(){if(W.c1==null)return "맛집";const c=META.c1[W.c1];
   if(W.sub!=null)return META.sub[W.c1][W.sub].split("·")[0];
   return c==="카페·디저트"?"카페":c==="주점"?"술집":c==="아시안"?"아시안음식":c==="치킨"?"치킨":c==="양식"?"양식":c+" 맛집"}
-function kReset(){KS.on=false;KS.list=[];KS.sel=-1;KS.page=0;KS.more=false}
+function kReset(){KS.on=false;KS.list=[];KS.sel=-1;KS.page=0;KS.more=false;const l=$("legend");if(l)l.hidden=true}
+function kCat(c,g){c=c||"";const h=k=>c.includes(k);
+  if(g==="CE7"||h("카페")||h("간식")||h("디저트")||h("제과")||h("베이커리"))return 6;
+  if(h("치킨"))return 5;if(h("술집")||h("호프")||h("주점")||h("포차")||h("이자카야")||h("와인")||h("칵테일"))return 7;
+  if(h("일식")||h("초밥")||h("돈까스")||h("라멘")||h("우동"))return 1;if(h("중식")||h("중국")||h("양꼬치")||h("마라"))return 2;
+  if(h("아시아")||h("베트남")||h("태국")||h("인도")||h("쌀국수"))return 4;
+  if(h("양식")||h("패스트푸드")||h("피자")||h("햄버거")||h("이탈리")||h("멕시")||h("스테이크"))return 3;
+  if(h("한식")||h("분식"))return 0;return 8}
 function kStart(){
   kReset();if(!W.place||!(window.kakao&&kakao.maps.services))return;
   const t=W.place[0],n=+W.place.slice(1);
@@ -604,12 +617,12 @@ function kStart(){
   KS.q=`${where} ${kwOf()}`;
   KS.opt={location:LL(c[0],c[1]),radius:t==="g"?4000:1500,sort:kakao.maps.services.SortBy.ACCURACY,
     category_group_code:W.c1!=null&&META.c1[W.c1]==="카페·디저트"?"CE7":"FD6"};
-  KS.on=true;kSearch(1);
+  KS.on=true;$("legend").hidden=false;kSearch(1);
 }
 function kSearch(page){if(KS.busy)return;KS.busy=true;bodySoon();
   new kakao.maps.services.Places().keywordSearch(KS.q,(data,status,pg)=>{KS.busy=false;
     if(status===kakao.maps.services.Status.OK){const seen=new Set(KS.list.map(d=>d.id));
-      data.forEach(d=>{if(seen.has(d.id))return;KS.list.push({id:d.id,n:d.place_name,cat:(d.category_name||"").split(" > ").slice(1).join(" · "),
+      data.forEach(d=>{if(seen.has(d.id))return;KS.list.push({id:d.id,c:kCat(d.category_name,d.category_group_code),n:d.place_name,cat:(d.category_name||"").split(" > ").slice(1).join(" · "),
         ph:d.phone,ad:d.road_address_name||d.address_name,la:+d.y,ln:+d.x,url:d.place_url,dist:+d.distance||0})});
       KS.page=page;KS.more=!!(pg&&pg.hasNextPage)
       if(page===1&&!total&&KS.list.length){let a=90,b=0,c=180,e=0;KS.list.forEach(d=>{a=Math.min(a,d.la);b=Math.max(b,d.la);c=Math.min(c,d.ln);e=Math.max(e,d.ln)});boxTo(a-.001,c-.001,b+.001,e+.001);if(map.getLevel()>5)map.setLevel(5);offset()}}
@@ -621,11 +634,11 @@ function kSelect(j,fromMap){KS.sel=KS.sel===j?-1:j;st.sel=-1;
     if(st.sheet==="peek")setSheet("half");$("body").scrollTop=0}
   draw();bodySoon()}
 function kSecHTML(){
-  const items=KS.list.map((d,j)=>`<button class="item${j===KS.sel?" sel":""}" type="button" data-k="${j}"><i class="kmk">K</i><span class="nm">${esc(d.n)}</span><span class="side">${d.dist?(d.dist<1000?d.dist+"m":(d.dist/1000).toFixed(1)+"km"):""}</span><span class="sub">${esc(d.cat)}</span></button>`).join("");
-  return `<div class="sec"><h2>카카오맵에서 찾은 집 <small>${KS.list.length}곳</small></h2><p class="ksrc">'${esc(KS.q)}' 카카오맵 검색 결과예요. 노란 네모 핀으로 보여요.</p>${items||(KS.busy?`<div class="empty">카카오맵에서 찾는 중…</div>`:`<div class="empty">카카오맵 검색 결과가 없어요.</div>`)}${KS.more?`<button class="btn" type="button" data-kmore style="justify-content:center">${KS.busy?"불러오는 중…":"더 보기"}</button>`:""}</div>`}
+  const items=KS.list.map((d,j)=>`<button class="item${j===KS.sel?" sel":""}" type="button" data-k="${j}"><i class="kmk" style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i><span class="nm">${esc(d.n)}</span><span class="side">${d.dist?(d.dist<1000?d.dist+"m":(d.dist/1000).toFixed(1)+"km"):""}</span><span class="sub">${esc(d.cat)}</span></button>`).join("");
+  return `<div class="sec"><h2>카카오맵에서 찾은 집 <small>${KS.list.length}곳</small></h2><p class="ksrc">'${esc(KS.q)}' 카카오맵 검색 결과예요. 지도에선 <b>네모 핀</b>이에요. (동그라미 핀은 골목밥 추천·등록 가게)</p>${items||(KS.busy?`<div class="empty">카카오맵에서 찾는 중…</div>`:`<div class="empty">카카오맵 검색 결과가 없어요.</div>`)}${KS.more?`<button class="btn" type="button" data-kmore style="justify-content:center">${KS.busy?"불러오는 중…":"더 보기"}</button>`:""}</div>`}
 function kCardHTML(d){const tel=(d.ph||"").replace(/[^0-9]/g,"");
   return `<div class="card">
-    <div class="k"><i style="background:#FFE14D;border:1px solid #1B2220"></i>${esc(d.cat||"음식점")} · 카카오맵 검색<button class="x" type="button" data-kclose aria-label="닫기">✕</button></div>
+    <div class="k"><i style="background:var(--k${d.c+1});border-radius:3px"></i>${esc(d.cat||"음식점")} · <b>카카오맵 검색</b><button class="x" type="button" data-kclose aria-label="닫기">✕</button></div>
     <h3>${esc(d.n)}</h3>
     <div class="acts">
       <a class="btn primary big" href="https://map.kakao.com/link/to/${encodeURIComponent(d.n)},${d.la},${d.ln}" target="_blank" rel="noopener">길찾기</a>
@@ -687,6 +700,11 @@ function inPlace(i,k){if(!k)return true;const t=k[0],n=+k.slice(1);
   if(t==="g")return G[i]===n;
   const c=t==="u"?[UNIS[n].lat,UNIS[n].lng]:[AREAS[n][1],AREAS[n][2]];
   return Math.abs(LAT[i]-c[0])<0.0095&&Math.abs(LNG[i]-c[1])<0.012}
+let SC={};function starCounts(t){if(SC[t])return SC[t];
+  let out;if(t==="uni")out=UNIS.map(u=>u.picks.length);
+  else if(t==="gu"){out=META.gu.map(()=>0);for(let i=0;i<N;i++)if(isStar(i))out[G[i]]++}
+  else{out=AREAS.map(()=>0);for(let i=0;i<N;i++)if(isStar(i))AREAS.forEach((a,j)=>{if(Math.abs(LAT[i]-a[1])<0.0095&&Math.abs(LNG[i]-a[2])<0.012)out[j]++})}
+  return SC[t]=out}
 function wCount(f){let n=0;for(let i=0;i<N;i++){if(C[i]===8)continue;if(f(i))n++}return n}
 function wDots(){$("wdots").innerHTML=Array.from({length:WSTEPS},(_,i)=>`<i class="${i<=W.step?"on":""}"></i>`).join("")}
 function wOpt(label,sub,on,cls,dot){const b=document.createElement("button");b.type="button";b.className="wopt "+(cls||"");
@@ -700,7 +718,8 @@ function wRender(){
     tb.innerHTML=[["uni","대학"],["area","유명한 동네"],["gu","구"]].map(([k,t])=>`<button type="button" data-t="${k}" aria-selected="${W.ptab===k}">${t}</button>`).join("");
     tb.querySelectorAll("button").forEach(b=>b.onclick=()=>{W.ptab=b.dataset.t;wRender()});
     g.append(wOpt("서울 전체",null,()=>{W.place=null;W.step=1;wRender()},"any"));
-    wPlaceList(W.ptab).forEach(p=>g.append(wOpt(p.t,W.ptab==="uni"?(UNIS[+p.k.slice(1)].picks.length?`추천 ${UNIS[+p.k.slice(1)].picks.length}곳`:"카카오맵 검색"):null,()=>{W.place=p.k;W.step=1;wRender()})));
+    const sc=starCounts(W.ptab);
+    wPlaceList(W.ptab).forEach((p,j)=>{const n=sc[j];const o=wOpt(p.t,n?`추천 ${n}곳`:"카카오맵 검색",()=>{W.place=p.k;W.step=1;wRender()});if(!n)o.querySelector("span").className="kk";g.append(o)});
   }else if(W.step===1){
     const where=W.place?placeName(W.place):"서울 전체";
     $("wq").textContent="뭐 먹을까요?";$("wsub").textContent=`${where}에서 고를게요.`;
