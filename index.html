@@ -242,7 +242,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 </style>
 </head>
 <body>
-<noscript><h1>골목밥 · 서울 대학가 맛집 지도</h1><ul><li><a href="u/yonsei/">연세대·신촌 맛집 추천</a></li><li><a href="u/ewha/">이화여대 맛집 추천</a></li><li><a href="u/hongik/">홍익대 맛집 추천</a></li><li><a href="u/korea/">고려대 맛집 추천</a></li><li><a href="u/skku/">성균관대·혜화 맛집 추천</a></li><li><a href="u/hanyang/">한양대 맛집 추천</a></li><li><a href="u/konkuk/">건국대 맛집 추천</a></li><li><a href="u/cau/">중앙대 맛집 추천</a></li><li><a href="u/snu/">서울대입구·샤로수길 맛집 추천</a></li><li><a href="u/khu/">경희대 맛집 추천</a></li></ul></noscript>
+<noscript><h1>골목밥 · 서울 대학가 맛집 지도</h1><ul><li><a href="u/yonsei/">연세대·신촌 맛집 추천</a></li><li><a href="u/ewha/">이화여대 맛집 추천</a></li><li><a href="u/hongik/">홍익대 맛집 추천</a></li><li><a href="u/korea/">고려대 맛집 추천</a></li><li><a href="u/skku/">성균관대·혜화 맛집 추천</a></li><li><a href="u/hanyang/">한양대 맛집 추천</a></li><li><a href="u/konkuk/">건국대 맛집 추천</a></li><li><a href="u/cau/">중앙대 맛집 추천</a></li><li><a href="u/snu/">서울대·샤로수길 맛집 추천</a></li><li><a href="u/khu/">경희대 맛집 추천</a></li></ul></noscript>
 <div id="kmap" aria-label="골목밥 맛집 지도"></div>
 
 <div class="top">
@@ -467,12 +467,31 @@ function loadKakao(){return new Promise((res,rej)=>{
   const s=document.createElement("script");s.src=`https://dapi.kakao.com/v2/maps/sdk.js?appkey=${encodeURIComponent(KAKAO_KEY)}&libraries=services&autoload=false`;
   s.onload=()=>{try{kakao.maps.load(res)}catch(e){rej(new Error("LOADFAIL"))}};s.onerror=()=>rej(new Error("LOADFAIL"));document.head.append(s)})}
 const LL=(la,ln)=>new kakao.maps.LatLng(la,ln);
+function touchFallback(){
+  if(!(navigator.maxTouchPoints>0)||/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent))return;
+  const el=$("kmap");let native=false,pts=new Map(),c0=null,moves=0,d0=0,last=null;
+  const P=e=>{const r=el.getBoundingClientRect();return [e.clientX-r.left,e.clientY-r.top]};
+  const dist=()=>{const a=[...pts.values()];return Math.hypot(a[0][0]-a[1][0],a[0][1]-a[1][1])};
+  el.addEventListener("touchstart",e=>{if(native)return;for(const t of e.changedTouches)pts.set(t.identifier,P(t));
+    c0=map.getCenter();moves=0;last=pts.size===1?[...pts.values()][0]:null;if(pts.size===2)d0=dist()},{passive:true,capture:true});
+  el.addEventListener("touchmove",e=>{if(native||!pts.size)return;for(const t of e.changedTouches)if(pts.has(t.identifier))pts.set(t.identifier,P(t));
+    moves++;if(moves===3){const c=map.getCenter();if(Math.abs(c.getLat()-c0.getLat())+Math.abs(c.getLng()-c0.getLng())>1e-7){native=true;return}}
+    if(moves<3){if(pts.size===1)last=[...pts.values()][0];return}
+    if(pts.size===1){const p=[...pts.values()][0];if(last){const pr=map.getProjection(),cp=pr.containerPointFromCoords(map.getCenter());
+        map.setCenter(pr.coordsFromContainerPoint(new kakao.maps.Point(cp.x-(p[0]-last[0]),cp.y-(p[1]-last[1]))))}last=p}
+    else if(pts.size===2){const d=dist(),a=[...pts.values()],mid=map.getProjection().coordsFromContainerPoint(new kakao.maps.Point((a[0][0]+a[1][0])/2,(a[0][1]+a[1][1])/2));
+      if(d/d0>1.45){map.setLevel(Math.max(1,map.getLevel()-1),{anchor:mid});d0=d}else if(d/d0<0.69){map.setLevel(Math.min(11,map.getLevel()+1),{anchor:mid});d0=d}last=null}
+    if(e.cancelable)e.preventDefault()},{passive:false,capture:true});
+  const end=e=>{for(const t of e.changedTouches)pts.delete(t.identifier);last=pts.size===1?[...pts.values()][0]:null;if(pts.size===2)d0=dist()};
+  el.addEventListener("touchend",end,{capture:true});el.addEventListener("touchcancel",end,{capture:true});
+}
 function initMap(){
   map=new kakao.maps.Map($("kmap"),{center:LL(37.5560,126.9860),level:9,maxLevel:11});
   try{map.setZoomable(true);map.setDraggable(true)}catch(e){}
   try{map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT)}catch(e){}
   try{map.setCopyrightPosition(kakao.maps.CopyrightPosition.BOTTOMRIGHT,true)}catch(e){}
   kakao.maps.event.addListener(map,"idle",()=>{draw();bodySoon()});
+  try{touchFallback()}catch(e){}
   kakao.maps.event.addListener(map,"click",()=>{if(Date.now()-lastTap<500)return;if(st.sel>=0){st.sel=-1;draw();bodySoon()}});
 }
 let raf=0;function draw(){if(!map)return;if(!raf)raf=requestAnimationFrame(()=>{raf=0;paint()})}
@@ -580,7 +599,7 @@ function renderBody(){
   if(st.sel>=0)h+=cardHTML(st.sel);
   if(st.picks){h+=`<div class="sec pick3"><div class="pickhead"><h2>이 중에서 골라봤어요</h2><button class="btn" type="button" data-reroll>다시 뽑기</button></div>${st.picks.map(i=>itemHTML(i)).join("")}</div>`}
   if(st.place&&st.place[0]==="u"&&!st.picks&&(UNIS[+st.place.slice(1)].picks.length||!KS.on)){const u=UNIS[+st.place.slice(1)];const ps=u.picks.filter(p=>MASK[p.i]);
-    h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
+    if(ps.length||!KS.on)h+=`<div class="sec"><h2>${esc(u.u)} 추천 <small>${ps.length}곳</small></h2>${RECO?`<a class="btn" style="justify-content:center" href="${esc(RECO)}" target="_blank" rel="noopener">우리 학교 맛집 추천하기</a>`:""}${ps.length?ps.map(p=>itemHTML(p.i,"도보 "+Math.max(2,Math.round(p.d*1.3/70))+"분")).join(""):`<div class="empty">조건에 맞는 추천 집이 없어요. 필터를 하나 풀어보세요.</div>`}</div>`}
   if(KS.on&&!st.q)h+=kSecHTML();
   if(st.q){const res=[];for(let i=0;i<N&&res.length<100;i++)if(MASK[i])res.push(i);
     h+=`<div class="sec"><h2>검색 결과 <small>${total.toLocaleString()}곳</small></h2>${res.length?res.map(i=>itemHTML(i)).join(""):`<div class="empty">찾는 가게가 없어요.${st.all?"":"<br>'전체 가게'를 켜면 서울 음식점 전체에서 찾아요."}</div>`}</div>`}
@@ -604,6 +623,17 @@ const KS={on:false,q:"",list:[],sel:-1,page:0,more:false,busy:false,opt:null};
 function kwOf(){if(W.c1==null)return "맛집";const c=META.c1[W.c1];
   if(W.sub!=null)return META.sub[W.c1][W.sub].split("·")[0];
   return c==="카페·디저트"?"카페":c==="주점"?"술집":c==="아시안"?"아시안음식":c==="치킨"?"치킨":c==="양식"?"양식":c+" 맛집"}
+function kSubOk(d){const t=(d.category_name||"")+" "+d.place_name;const words=META.sub[W.c1][W.sub].split("·").concat(KSUBX[META.sub[W.c1][W.sub]]||[]);return words.some(w=>t.includes(w))}
+const KSUBX={"고기구이":["육류","고기","삼겹살","갈비","곱창"],"국밥·탕":["국밥","해장국","감자탕","설렁탕","곰탕","순대"],"찌개·전골":["찌개","전골","부대"],"밥·백반":["백반","한정식","가정식","덮밥","쌈밥","비빔밥"],"면":["국수","냉면","칼국수","면"],"족발·보쌈":["족발","보쌈"],"해산물·회":["해물","생선","회","조개","게"],"분식":["분식","떡볶이","김밥"],
+ "초밥·회":["초밥","회","스시"],"라멘":["라멘","라면"],"돈가스":["돈까스","돈가스","카츠"],"우동·소바":["우동","소바"],"덮밥":["덮밥","돈부리"],"이자카야·꼬치":["이자카야","꼬치","야키토리"],
+ "면·짬뽕":["짬뽕","중식","중국"],"마라·훠궈":["마라","훠궈"],"양꼬치":["양꼬치"],"딤섬·만두":["딤섬","만두"],"요리·코스":["중식","중국요리"],
+ "파스타":["이탈리","파스타"],"피자":["피자"],"버거":["햄버거","버거"],"스테이크":["스테이크","립"],"브런치·샌드위치":["브런치","샌드위치","토스트"],
+ "쌀국수·베트남":["베트남","쌀국수"],"태국":["태국"],"인도·커리":["인도","카레","커리"],"멕시칸":["멕시","타코"],"기타 세계":["아시아","세계"],
+ "후라이드·양념":["치킨"],"구이·바베큐":["바베큐","숯불"],"찜닭·닭요리":["찜닭","닭"],
+ "커피·차":["커피","카페","차"],"베이커리":["베이커리","제과","빵"],"디저트":["디저트","케이크","아이스크림","도넛"],
+ "호프·맥주":["호프","맥주"],"포차·소주":["포장마차","포차","실내포장"],"와인·바":["와인","바"],"전·막걸리":["막걸리","전"]};
+const kn=s=>String(s||"").replace(/\s|\(.*?\)/g,"");
+function kOurs(d){const la=+d.y,ln=+d.x,a=kn(d.place_name);for(let i=0;i<N;i++){if(Math.abs(LAT[i]-la)>0.0006||Math.abs(LNG[i]-ln)>0.0008)continue;const r=nm(i);if(!r)continue;const b=kn(clean(r[0]));if(b&&(a.includes(b)||b.includes(a)))return true}return false}
 function kReset(){KS.on=false;KS.list=[];KS.sel=-1;KS.page=0;KS.more=false;const l=$("legend");if(l)l.hidden=true}
 function kCat(c,g){c=c||"";const h=k=>c.includes(k);
   if(g==="CE7"||h("카페")||h("간식")||h("디저트")||h("제과")||h("베이커리"))return 6;
@@ -620,14 +650,20 @@ function kStart(){
   KS.q=`${where} ${kwOf()}`;
   KS.opt={location:LL(c[0],c[1]),radius:t==="g"?4000:1500,sort:kakao.maps.services.SortBy.ACCURACY,
     category_group_code:W.c1!=null&&META.c1[W.c1]==="카페·디저트"?"CE7":"FD6"};
-  KS.on=true;$("legend").hidden=false;kSearch(1);
+  KS.on=true;$("legend").hidden=false;
+  const gs=new Set();for(let i=0;i<N;i++)if(Math.abs(LAT[i]-c[0])<0.02&&Math.abs(LNG[i]-c[1])<0.025)gs.add(G[i]);
+  Promise.all([...gs].map(loadGu)).then(()=>kSearch(1),()=>kSearch(1));
 }
 function kSearch(page){if(KS.busy)return;KS.busy=true;bodySoon();
   new kakao.maps.services.Places().keywordSearch(KS.q,(data,status,pg)=>{KS.busy=false;
     if(status===kakao.maps.services.Status.OK){const seen=new Set(KS.list.map(d=>d.id));
-      data.forEach(d=>{if(seen.has(d.id))return;KS.list.push({id:d.id,c:kCat(d.category_name,d.category_group_code),n:d.place_name,cat:(d.category_name||"").split(" > ").slice(1).join(" · "),
+      data.forEach(d=>{if(seen.has(d.id))return;const kc=kCat(d.category_name,d.category_group_code);
+        if(W.c1!=null&&kc!==W.c1)return;
+        if(W.sub!=null&&!kSubOk(d))return;
+        if(kOurs(d))return;
+        KS.list.push({id:d.id,c:kCat(d.category_name,d.category_group_code),n:d.place_name,cat:(d.category_name||"").split(" > ").slice(1).join(" · "),
         ph:d.phone,ad:d.road_address_name||d.address_name,la:+d.y,ln:+d.x,url:d.place_url,dist:+d.distance||0})});
-      KS.page=page;KS.more=!!(pg&&pg.hasNextPage)
+      KS.page=page;KS.more=!!(pg&&pg.hasNextPage);if(KS.more&&KS.list.length<8){KS.busy=false;setTimeout(()=>kSearch(page+1),0)}
       if(page===1&&!total&&KS.list.length){let a=90,b=0,c=180,e=0;KS.list.forEach(d=>{a=Math.min(a,d.la);b=Math.max(b,d.la);c=Math.min(c,d.ln);e=Math.max(e,d.ln)});boxTo(a-.001,c-.001,b+.001,e+.001);if(map.getLevel()>5)map.setLevel(5);offset()}}
     else if(status!==kakao.maps.services.Status.ZERO_RESULT&&page===1)toast("카카오맵 검색을 못 불러왔어요");
     draw();bodySoon()},Object.assign({page},KS.opt));
@@ -638,7 +674,7 @@ function kSelect(j,fromMap){KS.sel=KS.sel===j?-1:j;st.sel=-1;
   draw();bodySoon()}
 function kSecHTML(){
   const items=KS.list.map((d,j)=>`<button class="item${j===KS.sel?" sel":""}" type="button" data-k="${j}"><i class="kmk" style="background:var(--k${d.c+1})">${GLYPH[d.c]}</i><span class="nm">${esc(d.n)}</span><span class="side">${d.dist?(d.dist<1000?d.dist+"m":(d.dist/1000).toFixed(1)+"km"):""}</span><span class="sub">${esc(d.cat)}</span></button>`).join("");
-  return `<div class="sec"><h2>카카오맵에서 찾은 집 <small>${KS.list.length}곳</small></h2><p class="ksrc">'${esc(KS.q)}' 카카오맵 검색 결과예요. 지도에선 <b>네모 핀</b>이에요. (동그라미 핀은 골목밥 추천·등록 가게)</p>${items||(KS.busy?`<div class="empty">카카오맵에서 찾는 중…</div>`:`<div class="empty">카카오맵 검색 결과가 없어요.</div>`)}${KS.more?`<button class="btn" type="button" data-kmore style="justify-content:center">${KS.busy?"불러오는 중…":"더 보기"}</button>`:""}</div>`}
+  return `<div class="sec"><h2>카카오맵에서 찾은 집 <small>${KS.list.length}곳</small></h2><p class="ksrc">'${esc(KS.q)}' 카카오맵 검색 결과예요. 지도에선 <b>네모 핀</b>이에요. (동그라미 핀은 골목밥 추천·등록 가게)</p>${items||(KS.busy?`<div class="empty">카카오맵에서 찾는 중…</div>`:`<div class="empty">카카오맵에서도 딱 맞는 집을 못 찾았어요.</div>`)}${KS.more?`<button class="btn" type="button" data-kmore style="justify-content:center">${KS.busy?"불러오는 중…":"더 보기"}</button>`:""}</div>`}
 function kCardHTML(d){const tel=(d.ph||"").replace(/[^0-9]/g,"");
   return `<div class="card">
     <div class="k"><i style="background:var(--k${d.c+1});border-radius:3px"></i>${esc(d.cat||"음식점")} · <b>카카오맵 검색</b><button class="x" type="button" data-kclose aria-label="닫기">✕</button></div>
