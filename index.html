@@ -41,7 +41,7 @@ html,body{height:100%;margin:0}
 body{overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.45;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit}
 button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-#kmap{position:fixed;left:0;right:0;top:0;bottom:calc(var(--peek) - 18px + env(safe-area-inset-bottom,0px));background:var(--soft)}
+#kmap{touch-action:none;-ms-touch-action:none;overscroll-behavior:none;position:fixed;left:0;right:0;top:0;bottom:calc(var(--peek) - 18px + env(safe-area-inset-bottom,0px));background:var(--soft)}
 @media (min-width:900px){#kmap{bottom:0;left:0}}
 
 /* 위쪽 바 */
@@ -69,7 +69,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .fab{appearance:none;width:42px;height:42px;border-radius:12px;border:0;background:var(--surface);box-shadow:var(--sh);font-size:20px;cursor:pointer;display:grid;place-items:center}
 .fab.txt{font-size:12px;font-weight:700}
 .crumb{position:fixed;z-index:15;left:50%;transform:translateX(-50%);top:calc(env(safe-area-inset-top,0px) + 112px);background:var(--ink);color:var(--bg);font-size:13px;font-weight:700;border-radius:999px;padding:5px 12px;box-shadow:var(--sh);pointer-events:none;white-space:nowrap;max-width:60vw;overflow:hidden;text-overflow:ellipsis}
-@media (max-width:899px){.fab{width:40px;height:40px}.fabs{top:calc(env(safe-area-inset-top,0px) + 118px)}.crumb{top:calc(env(safe-area-inset-top,0px) + 112px)}}
+@media (max-width:899px){.fab:not(.txt){display:none}.fab{width:40px;height:40px}.fabs{top:calc(env(safe-area-inset-top,0px) + 118px)}.crumb{top:calc(env(safe-area-inset-top,0px) + 112px)}}
 @media (min-width:900px){.crumb{left:calc(50% + 216px)}.fabs{top:16px}}
 
 /* 아래 시트 */
@@ -244,6 +244,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 <div class="loading" id="loading"><div><b>서울 맛집</b>맛집 지도를 불러오는 중…</div></div>
 
 <script src="config.js"></script>
+<script>(function(){var c=(window.GOATCOUNTER||"").trim();if(!c)return;var s=document.createElement("script");s.async=true;s.src="https://gc.zgo.at/count.js";s.dataset.goatcounter="https://"+c+".goatcounter.com/count";document.head.appendChild(s)})();</script>
 <script>
 (()=>{
 const KAKAO_KEY=(window.KAKAO_KEY||"").trim();
@@ -387,7 +388,7 @@ function openMode(){const mm=$("modeMenu"),r=$("modeBtn").getBoundingClientRect(
   mm.hidden=false;mm.querySelectorAll("button").forEach(b=>b.onclick=()=>{st.mode=b.dataset.k;save();mm.hidden=true;renderPlaces()});
   setTimeout(()=>document.addEventListener("click",function h(e){if(!mm.contains(e.target)){mm.hidden=true;document.removeEventListener("click",h)}}),0)}
 function choose(k){
-  const t=k[0],i=+k.slice(1);
+  const t=k[0],i=+k.slice(1);if(t==="u")ev("학교-"+UNIS[i].slug);
   if(st.place===k){st.place=null;if(t==="g"){st.gu=-1;update()}setCrumb("");renderPlaces();bodySoon();return}
   st.place=k;st.picks=null;st.sel=-1;
   if(t==="g"){st.gu=i;update();fitGu(i)}
@@ -409,6 +410,7 @@ const LL=(la,ln)=>new kakao.maps.LatLng(la,ln);
 function initMap(){
   map=new kakao.maps.Map($("kmap"),{center:LL(37.5560,126.9860),level:9,maxLevel:11});
   try{map.setZoomable(true);map.setDraggable(true)}catch(e){}
+  try{map.addControl(new kakao.maps.ZoomControl(),kakao.maps.ControlPosition.RIGHT)}catch(e){}
   try{map.setCopyrightPosition(kakao.maps.CopyrightPosition.BOTTOMRIGHT,true)}catch(e){}
   kakao.maps.event.addListener(map,"idle",()=>{draw();bodySoon()});
   kakao.maps.event.addListener(map,"click",()=>{if(Date.now()-lastTap<500)return;if(st.sel>=0){st.sel=-1;draw();bodySoon()}});
@@ -467,7 +469,7 @@ function flyTo(i){map.setLevel(Math.min(map.getLevel(),3));map.setCenter(LL(LAT[
 function select(i,fromMap){st.sel=st.sel===i?-1:i;draw();
   if(st.sel>=0){loadGu(G[i]).then(()=>{draw();bodySoon()});if(st.sheet==="peek")setSheet("half");$("body").scrollTop=0}
   bodySoon()}
-$("zin").onclick=()=>map.setLevel(map.getLevel()-1,{animate:true});$("zout").onclick=()=>map.setLevel(map.getLevel()+1,{animate:true});
+$("zin").onclick=()=>{if(map)map.setLevel(Math.max(1,map.getLevel()-1))};$("zout").onclick=()=>{if(map)map.setLevel(Math.min(11,map.getLevel()+1))};
 $("zall").onclick=()=>{st.gu=-1;st.place=null;st.sel=-1;st.picks=null;update();renderPlaces();fitSeoul();setCrumb("")};
 
 /* ---------- 시트 ---------- */
@@ -531,7 +533,8 @@ function renderBody(){
 }
 
 /* ---------- 오늘 뭐 먹지 ---------- */
-function roll(){
+function ev(n){try{window.goatcounter&&window.goatcounter.count({path:"ev-"+n,title:n,event:true})}catch(e){}}
+function roll(){ev("오늘뭐먹지");
   let pool=[];
   if(st.place&&st.place[0]==="u")pool=UNIS[+st.place.slice(1)].picks.map(p=>p.i).filter(i=>MASK[i]);
   if(!pool.length){readBounds();for(let i=0;i<N;i++)if(MASK[i]&&isStar(i)&&inView(i))pool.push(i)}
@@ -550,7 +553,7 @@ $("roll").onclick=roll;
 /* ---------- 공유 ---------- */
 function shareURL(i){const r=nm(i);const u=new URL(location.href.split("?")[0].split("#")[0]);
   u.searchParams.set("p",clean(r?r[0]:""));u.searchParams.set("at",LAT[i].toFixed(5)+","+LNG[i].toFixed(5));return u.toString()}
-async function share(i){const r=nm(i);if(!r)return;const c=cur(i),name=clean(r[0]);
+async function share(i){const r=nm(i);if(!r)return;ev("공유");const c=cur(i),name=clean(r[0]);
   const text=`여기 갈래? 🍽 ${name}${c&&c[0]?" - "+c[0]+(c[1]?" "+won(c[1]):""):""}`;const url=shareURL(i);
   if(navigator.share){try{await navigator.share({title:name,text,url});return}catch(e){if(e&&e.name==="AbortError")return}}
   try{await navigator.clipboard.writeText(text+"\n"+url);toast("링크를 복사했어요. 단톡방에 붙여넣어 보내세요!")}
