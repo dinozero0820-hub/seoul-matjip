@@ -10,7 +10,8 @@ curated.json 항목 형식:
  {"u":"학교 이름(campuses.json의 u)", "key":"가게 이름 일부", "hint":"주소 일부(없으면 빈칸)",
   "c1":"한식|일식|중식|양식|아시안|치킨|카페·디저트|주점", "sub":["메뉴 분류", ...],
   "menu":"대표 메뉴", "price":1인 가격(원, 모르면 0), "sp":0 안매움/1 모름·일부/2 매움,
-  "tags":"s혼밥 l늦게까지(자정 이후) w줄서는편 g단체 d데이트 조합", "why":"한 줄 평(내 말로)", "src":"출처 사이트명"}
+  "tags":"s혼밥 l늦게까지(자정 이후) w줄서는편 g단체 d데이트 조합", "why":"한 줄 평(내 말로)", "src":"출처 사이트명",
+  "phone":"(선택) 출처에 적힌 전화번호. 없으면 인허가 신고 번호를 씀"}
 출처에 적힌 사실만 넣는다. 문장·사진을 그대로 가져오지 않는다.
 """
 import json, base64, struct, math, re, os, sys, datetime
@@ -73,7 +74,7 @@ for e in cur:
     if i not in CUR: added += 1
     C[i] = ci; S[i] = mask; F[i] = (int(e.get("sp", 1)) & 3) | 4
     r = row(i)
-    CUR[i] = [e.get("menu", ""), int(e.get("price") or 0), e.get("tags", ""), e.get("why", ""), e.get("src", ""), r[0], r[1]]
+    CUR[i] = [e.get("menu", ""), int(e.get("price") or 0), e.get("tags", ""), e.get("why", ""), e.get("src", ""), r[0], r[1], e.get("phone") or (r[3] if len(r) > 3 else "")]
     picks[e["u"]][i] = int(best[2])
 
 for i in range(N):

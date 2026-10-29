@@ -122,6 +122,7 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .menuline .p.none{font-family:var(--f-body);font-size:13px;color:var(--muted);font-weight:500}
 .why{margin:0;font-size:15px}
 .acts{display:flex;gap:8px}
+.acts .btn.big{padding-inline:8px}
 .meta{font-size:12px;color:var(--muted)}
 .x{appearance:none;border:0;background:var(--soft);border-radius:50%;width:32px;height:32px;cursor:pointer;margin-left:auto;color:var(--muted);flex:none}
 
@@ -293,7 +294,8 @@ function loadGu(gi){
   const p=fetch(`gu/${gi}.json`).then(r=>r.json()).then(j=>{names.set(gi,j);pending.delete(gi);return j});
   pending.set(gi,p);return p;
 }
-const nm=i=>names.get(G[i])?.[LI[i]]||(CUR[i]?[CUR[i][5],CUR[i][6],""]:undefined);
+const nm=i=>names.get(G[i])?.[LI[i]]||(CUR[i]?[CUR[i][5],CUR[i][6],"",CUR[i][7]||""]:undefined);
+const phoneOf=i=>(CUR[i]&&CUR[i][7])||(nm(i)||[])[3]||"";
 const isStar=i=>!!(P[i]&4);
 const cur=i=>CUR[i];
 const tagsOf=i=>(CUR[i]&&CUR[i][2])||"";
@@ -505,12 +507,13 @@ function cardHTML(i){const r=nm(i);if(!r)return `<div class="card"><div class="m
     <div class="acts">
       <a class="btn primary big" href="https://map.kakao.com/link/to/${encodeURIComponent(name)},${LAT[i].toFixed(6)},${LNG[i].toFixed(6)}" target="_blank" rel="noopener">길찾기</a>
       <button class="btn big" type="button" data-share="${i}">여기 갈래? 공유</button>
+      ${phoneOf(i)?`<a class="btn big" href="tel:${phoneOf(i).replace(/[^0-9]/g,"")}" aria-label="전화 걸기 ${esc(phoneOf(i))}">전화</a>`:""}
       <button class="heart" type="button" data-fav="${i}" aria-pressed="${FAVI.has(i)}" aria-label="찜하기">${FAVI.has(i)?"♥":"♡"}</button>
     </div>
     ${c&&c[0]?`<div class="menuline"><span>${esc(c[0])}</span><span class="p${c[1]?"":" none"}">${c[1]?won(c[1]):"가격 정보 없음"}</span></div>`:""}
     ${c&&c[3]?`<p class="why">${esc(c[3])}</p>`:""}
     ${tg.length?`<div class="tags" style="grid-column:auto">${tg.join("")}</div>`:""}
-    <div class="meta">${META.gu[G[i]]} ${esc(r[1])}${c&&c[4]?` · 출처: ${esc(c[4])}`:""} · <a href="https://map.kakao.com/?q=${encodeURIComponent(name+" "+META.gu[G[i]])}" target="_blank" rel="noopener" style="color:inherit">카카오맵 리뷰 보기</a>${REPORT?` · <a class="report" href="${esc(REPORT)}" target="_blank" rel="noopener">폐업·정보 수정 제보</a>`:""}</div>
+    <div class="meta">${META.gu[G[i]]} ${esc(r[1])}${phoneOf(i)?` · ☎ ${esc(phoneOf(i))}`:""}${c&&c[4]?` · 출처: ${esc(c[4])}`:""} · <a href="https://map.kakao.com/?q=${encodeURIComponent(name+" "+META.gu[G[i]])}" target="_blank" rel="noopener" style="color:inherit">카카오맵 리뷰 보기</a>${REPORT?` · <a class="report" href="${esc(REPORT)}" target="_blank" rel="noopener">폐업·정보 수정 제보</a>`:""}</div>
   </div>`}
 function renderBody(){
   if(!META||!map)return;readBounds();
