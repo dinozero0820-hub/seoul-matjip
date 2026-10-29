@@ -217,12 +217,15 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
 .wgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:auto;align-content:start;flex:1;min-height:0;padding-bottom:4px}
 .wgrid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .wgrid.one{grid-template-columns:1fr}
-.wopt{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 12px;text-align:left;cursor:pointer;display:grid;gap:3px;min-height:64px;align-content:center;min-width:0}
-.wopt b{font-size:16px;display:flex;align-items:center;gap:7px;min-width:0;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere}
-.wopt span.kk{color:#8A6D00}
-.wopt b i{width:10px;height:10px;border-radius:50%;flex:none}
-.wopt span{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
-.wopt.big{min-height:84px}.wopt.big b{font-size:20px}
+.wopt{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:16px;padding:14px 12px;text-align:left;cursor:pointer;display:flex;align-items:center;min-height:64px;min-width:0;color:var(--ink)}
+.wopt .wi{display:block;width:100%}
+.wopt strong{display:block;font-size:16px;font-weight:700;line-height:1.25;word-break:keep-all;overflow-wrap:anywhere;color:var(--ink)}
+.wopt strong i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.wopt small{display:block;margin-top:3px;font-size:12px;line-height:1.3;color:var(--muted);white-space:nowrap}
+.wopt small.kk{color:#B08A00}
+
+
+.wopt.big{min-height:84px}.wopt.big strong{font-size:20px}
 .wopt.any{background:var(--soft)}
 .wopt.zero{opacity:.45}
 .wopt:active{transform:scale(.98)}
@@ -708,7 +711,7 @@ let SC={};function starCounts(t){if(SC[t])return SC[t];
 function wCount(f){let n=0;for(let i=0;i<N;i++){if(C[i]===8)continue;if(f(i))n++}return n}
 function wDots(){$("wdots").innerHTML=Array.from({length:WSTEPS},(_,i)=>`<i class="${i<=W.step?"on":""}"></i>`).join("")}
 function wOpt(label,sub,on,cls,dot){const b=document.createElement("button");b.type="button";b.className="wopt "+(cls||"");
-  b.innerHTML=`<b>${dot?`<i style="background:var(${dot})"></i>`:""}${esc(label)}</b>${sub!=null?`<span>${sub}</span>`:""}`;b.onclick=on;return b}
+  b.innerHTML=`<div class="wi"><strong>${dot?`<i style="background:var(${dot})"></i>`:""}${esc(label)}</strong>${sub!=null?`<small>${sub}</small>`:""}</div>`;b.onclick=on;return b}
 function wRender(){
   wDots();$("wback").disabled=W.step===0;const g=$("wgrid");g.innerHTML="";g.className="wgrid";$("wtabs").hidden=true;
   if(RECO){$("wreco").href=RECO;$("wreco").hidden=false}
@@ -719,7 +722,7 @@ function wRender(){
     tb.querySelectorAll("button").forEach(b=>b.onclick=()=>{W.ptab=b.dataset.t;wRender()});
     g.append(wOpt("서울 전체",null,()=>{W.place=null;W.step=1;wRender()},"any"));
     const sc=starCounts(W.ptab);
-    wPlaceList(W.ptab).forEach((p,j)=>{const n=sc[j];const o=wOpt(p.t,n?`추천 ${n}곳`:"카카오맵 검색",()=>{W.place=p.k;W.step=1;wRender()});if(!n)o.querySelector("span").className="kk";g.append(o)});
+    wPlaceList(W.ptab).forEach((p,j)=>{const n=sc[j];const o=wOpt(p.t,n?`추천 ${n}곳`:"카카오맵 검색",()=>{W.place=p.k;W.step=1;wRender()});if(!n)o.querySelector("small").className="kk";g.append(o)});
   }else if(W.step===1){
     const where=W.place?placeName(W.place):"서울 전체";
     $("wq").textContent="뭐 먹을까요?";$("wsub").textContent=`${where}에서 고를게요.`;
