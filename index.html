@@ -265,7 +265,6 @@ button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(-
     <div class="pbody">
       <div class="grp"><h3>보여줄 가게</h3><div class="seg" id="fall"></div><p class="note">추천 집은 메뉴·가격·맵기를 직접 확인한 곳이에요. 전체는 서울에서 영업 중인 음식점 약 10만 곳이고 자동 분류라 틀릴 수 있어요.</p></div>
       <div class="grp"><h3>음식 종류</h3><div class="tiles" id="f1"></div><div id="f2"></div></div>
-      <div class="grp"><h3>맵기</h3><div class="seg" id="f3"></div></div>
       <div class="grp"><h3>상황</h3><div class="tiles" id="f4"></div><p class="note">상황 조건은 추천 집 정보로만 걸러져요.</p></div>
     </div>
     <div class="pfoot"><button class="btn" id="preset" type="button">초기화</button><button class="btn dark big" id="papply" type="button">0곳 보기</button></div>
@@ -312,7 +311,7 @@ const saveFav=()=>{try{localStorage.setItem("seoul-fav",JSON.stringify(FAV))}cat
 let META,N=0,LNG,LAT,C,S,P,G,LI,MASK,GOFF=[],GCENT=[],UNIS=[],CUR={};
 const names=new Map(),pending=new Map();
 const st={near:null,favOnly:false,mode:"uni",place:null,gu:-1,q:"",all:false,c1:new Set(),c2:new Set(),sp:"all",sit:new Set(),sel:-1,sheet:"peek",picks:null};
-try{const s=JSON.parse(localStorage.getItem("seoul-app1")||"null");if(s){st.c1=new Set(s.c1||[]);st.c2=new Set(s.c2||[]);st.sp=s.sp||"all";st.sit=new Set(s.sit||[]);st.all=!!s.all;st.mode=s.mode||"uni"}}catch(e){}
+try{const s=JSON.parse(localStorage.getItem("seoul-app1")||"null");if(s){st.c1=new Set(s.c1||[]);st.c2=new Set(s.c2||[]);st.sp="all";st.sit=new Set(s.sit||[]);st.all=!!s.all;st.mode=s.mode||"uni"}}catch(e){}
 const save=()=>{try{localStorage.setItem("seoul-app1",JSON.stringify({c1:[...st.c1],c2:[...st.c2],sp:st.sp,sit:[...st.sit],all:st.all,mode:st.mode}))}catch(e){}};
 
 /* ---------- 데이터 ---------- */
@@ -400,7 +399,6 @@ function buildPanel(){
     const t=document.createElement("div");t.className="tiles";
     META.sub[ci].forEach((sk,b)=>t.append(tile(sk,subn[ci][b],st.c2.has(k+"|"+sk),null,()=>{const key=k+"|"+sk;st.c2.has(key)?st.c2.delete(key):st.c2.add(key);update()})));
     g.append(t);f2.append(g)});
-  seg($("f3"),SPT,st.sp,k=>{st.sp=k;update()});
   const f4=$("f4");f4.innerHTML="";
   SIT.forEach(s=>f4.append(tile(s.t,sitn[s.k],st.sit.has(s.k),null,()=>{st.sit.has(s.k)?st.sit.delete(s.k):st.sit.add(s.k);update()})));
   $("papply").textContent=`${total.toLocaleString()}곳 보기`;
@@ -621,7 +619,7 @@ async function openShared(){
 
 /* ---------- 단계별 고르기: 어디서 → 뭐 → 메뉴 → 맵기 → 지도 ---------- */
 const W={step:0,ptab:"area",place:null,c1:null,sub:null,sp:"all"};
-const WSTEPS=4;
+const WSTEPS=3;
 function wPlaceList(t){
   if(t==="uni")return UNIS.map((u,i)=>({k:"u"+i,t:u.u.split("·")[0],la:u.lat,ln:u.lng}));
   if(t==="area")return AREAS.map((a,i)=>({k:"a"+i,t:a[0],la:a[1],ln:a[2]}));
@@ -649,14 +647,14 @@ function wRender(){
     const where=W.place?placeName(W.place):"서울 전체";
     $("wq").textContent="뭐 먹을까요?";$("wsub").textContent=`${where}에서 고를게요.`;
     const base=i=>inPlace(i,W.place);
-    g.append(wOpt("아무거나",fmt(wCount(base))+"곳",()=>{W.c1=null;W.sub=null;W.step=3;wRender()},"any"));
+    g.append(wOpt("아무거나",fmt(wCount(base))+"곳",()=>{W.c1=null;W.sub=null;W.sp="all";wApply()},"any"));
     META.c1.forEach((k,ci)=>{if(k==="기타")return;const n=wCount(i=>C[i]===ci&&base(i));
-      g.append(wOpt(k,fmt(n)+"곳",()=>{W.c1=ci;W.sub=null;W.step=META.sub[ci].length?2:3;wRender()},n?"":"zero",`--k${ci+1}`))});
+      g.append(wOpt(k,fmt(n)+"곳",()=>{W.c1=ci;W.sub=null;W.sp="all";if(META.sub[ci].length){W.step=2;wRender()}else wApply()},n?"":"zero",`--k${ci+1}`))});
   }else if(W.step===2){
     const ci=W.c1;$("wq").textContent=`${META.c1[ci]} 중에서 뭐가 끌려요?`;$("wsub").textContent="하나 골라도 되고, 다 좋아도 돼요.";
     const base=i=>C[i]===ci&&inPlace(i,W.place);
-    g.append(wOpt(`${META.c1[ci]} 다 좋아요`,fmt(wCount(base))+"곳",()=>{W.sub=null;W.step=3;wRender()},"any"));
-    META.sub[ci].forEach((sk,b)=>{const n=wCount(i=>base(i)&&(S[i]&(1<<b)));g.append(wOpt(sk,fmt(n)+"곳",()=>{W.sub=b;W.step=3;wRender()},n?"":"zero"))});
+    g.append(wOpt(`${META.c1[ci]} 다 좋아요`,fmt(wCount(base))+"곳",()=>{W.sub=null;W.sp="all";wApply()},"any"));
+    META.sub[ci].forEach((sk,b)=>{const n=wCount(i=>base(i)&&(S[i]&(1<<b)));g.append(wOpt(sk,fmt(n)+"곳",()=>{W.sub=b;W.sp="all";wApply()},n?"":"zero"))});
   }else{
     $("wq").textContent="매운 거 괜찮아요?";$("wsub").textContent="맵기는 가게 이름과 메뉴로 판단해요. 확인 안 된 집은 '안 매운 거'에 같이 나와요.";
     g.className="wgrid one";
@@ -683,11 +681,10 @@ function wApply(){
 function showPick(){
   const parts=[W.place?placeName(W.place):"서울 전체"];
   parts.push(W.c1==null?"아무거나":(W.sub==null?META.c1[W.c1]:META.sub[W.c1][W.sub]));
-  parts.push(W.sp==="hot"?"매운 거":W.sp==="mild"?"안 매운 거":"맵기 상관없음");
   $("pickbtn").innerHTML=`${esc(parts.join(" · "))}<span>바꾸기</span>`;$("pick").hidden=false;
 }
 $("pickbtn").onclick=()=>openWiz(0);
-$("wback").onclick=()=>{if(W.step===3&&(W.c1==null||!META.sub[W.c1].length))W.step=W.c1==null?1:1;else W.step=Math.max(0,W.step-1);wRender()};
+$("wback").onclick=()=>{W.step=Math.max(0,W.step-1);wRender()};
 $("wclose").onclick=closeWiz;$("wskip").onclick=closeWiz;
 
 /* ---------- 첫 방문 ---------- */
