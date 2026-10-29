@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dinozero0820-hub.github.io/seoul-matjip/sitemap.xml
